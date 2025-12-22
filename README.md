@@ -15,6 +15,19 @@ The focus is on **observability, failure modes, and runbooks**, not on fancy UI.
 - **Hosting target**: GCP Cloud Run
 - **Observability**: Datadog APM, custom metrics, structured logs
 
+## 🚀 Innovation Features
+
+This solution goes beyond standard observability with:
+
+1. **🎯 Composite Health Score (0-100)**: Single metric combining performance, reliability, cost, quality, and security
+2. **💡 AI-Powered Cost Optimization**: Intelligent recommendations with estimated savings
+3. **🔮 Predictive Anomaly Detection**: Forecasts issues before they happen
+4. **🛡️ Automated Security Recommendations**: Detects attacks and suggests remediation
+5. **📊 Real-Time Quality Analysis**: Semantic similarity and hallucination detection
+6. **🎨 Intelligent Insights Endpoint**: `/insights` provides comprehensive AI analysis
+
+See [INNOVATION_FEATURES.md](INNOVATION_FEATURES.md) for detailed explanation of each feature.
+
 Repo layout:
 
 - `app/` – FastAPI app and supporting modules  
@@ -50,6 +63,26 @@ All endpoints accept **failure toggles** so you can deterministically trigger in
 
 - **Purpose**: Long-context prompts → used for **token & cost explosions**.
 - Body includes `repetitions` to blow up context length.
+
+### `POST /insights` 🚀 **NEW - AI-Powered Insights**
+
+- **Purpose**: Get AI-powered analysis of system health, cost optimization recommendations, predictive alerts, and automated remediation suggestions.
+- **Innovation**: This endpoint provides intelligent recommendations based on current metrics and trends.
+- Body: Current metrics (latency, error rate, cost, quality, security metrics)
+- Response: Health score, prioritized recommendations, predictive insights, and top 5 priority actions
+
+Example:
+```json
+{
+  "avg_latency_ms": 1200,
+  "error_rate": 0.02,
+  "avg_cost_per_request": 0.005,
+  "avg_quality_score": 0.75,
+  "cost_trend": "increasing"
+}
+```
+
+Returns AI-powered recommendations for cost optimization, reliability improvements, and predictive alerts.
 
 ## Telemetry Design
 
@@ -242,6 +275,14 @@ python traffic-generator/generate_load.py
    - **Monitors**: Monitors → Filter by tag `llm`
    - **Incidents**: Incidents → View auto-created incidents with context
 
+## Submission Information
+
+**Datadog Organization**: [Add your Datadog organization name here]
+
+**Hosted Application URL**: [Add your deployed application URL here]
+
+**Dashboard Link**: [Add your Datadog dashboard link here after import]
+
 ## Judge Questions Mapping
 
 - **What failed?**
@@ -251,5 +292,12 @@ python traffic-generator/generate_load.py
   - Use tags (`endpoint`, `model`, `request_type`, `simulate_*`) and logs (prompt + metadata) to see if it was cost, latency, safety, or quality driven.
 - **What should the engineer do next?**
   - Runbooks attached to monitors (e.g., downgrade model, enable caching, block abusive prompts).
+
+## Additional Documentation
+
+- **REQUIREMENTS_COMPLIANCE.md**: Complete checklist of all requirements
+- **DATADOG_SETUP.md**: Step-by-step Datadog configuration guide
+- **INCIDENT_CREATION_GUIDE.md**: How to configure and test incident creation
+- **SUBMISSION_CHECKLIST.md**: Pre-submission checklist
 
 

@@ -116,6 +116,29 @@
         "attach_dashboard": true,
         "attach_logs": true
       }
+    },
+    {
+      "name": "LLM Health Score Degradation",
+      "type": "metric alert",
+      "query": "avg(last_10m):avg:llm.health_score{service:llm-reliability-control-plane} < 60",
+      "message": "🚨 **What failed?** Composite health score has dropped below 60 (degraded threshold).\n\n**Why did it fail?** The health score combines performance, reliability, cost, quality, and security metrics. A low score indicates multiple issues across these dimensions.\n\n**What should the engineer do next?**\n1. Call `/insights` endpoint for AI-powered recommendations\n2. Review component scores (performance, reliability, cost, quality, security)\n3. Check individual monitors for specific issues\n4. Review predictive insights for trending problems\n5. Implement top priority recommendations from insights API\n\n**Attached context:** Health score breakdown, insights recommendations, and component metrics are attached.",
+      "tags": ["llm", "health", "composite", "innovation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Health score remains degraded. Review insights endpoint for recommendations.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
     }
   ]
 }

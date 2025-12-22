@@ -12,6 +12,15 @@ class LLMClient:
     For hackathon/demo purposes, this implementation is intentionally simple and
     returns synthetic responses so you can focus on observability and control-plane
     behavior. You can later swap this out for a real Vertex AI client.
+
+    To integrate with real Vertex AI:
+    1. Install: pip install google-cloud-aiplatform
+    2. Set GCP credentials: export GOOGLE_APPLICATION_CREDENTIALS=/path/to/key.json
+    3. Replace synthetic logic with:
+       from vertexai.generative_models import GenerativeModel
+       model = GenerativeModel(settings.gemini_model)
+       response = await model.generate_content_async(prompt)
+       # Extract tokens, cost, etc. from response
     """
 
     async def generate(

@@ -54,22 +54,73 @@ async def run_phase(client: httpx.AsyncClient, phase: Literal["normal", "cost_sp
     await asyncio.gather(*tasks)
 
 
+async def get_insights(client: httpx.AsyncClient) -> None:
+    """Demonstrate AI-powered insights endpoint."""
+    print("\n🔍 Fetching AI-powered insights...")
+    insights_body = {
+        "avg_latency_ms": 1200.0,
+        "error_rate": 0.02,
+        "retry_rate": 0.05,
+        "avg_cost_per_request": 0.008,
+        "avg_input_tokens": 1500.0,
+        "avg_output_tokens": 200.0,
+        "avg_quality_score": 0.65,
+        "ungrounded_rate": 0.08,
+        "safety_block_rate": 0.03,
+        "injection_risk_rate": 0.01,
+        "token_abuse_rate": 0.005,
+        "timeout_rate": 0.01,
+        "latency_trend": "increasing",
+        "cost_trend": "increasing",
+        "error_trend": "stable",
+    }
+    try:
+        response = await client.post(f"{BASE_URL}/insights", json=insights_body)
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ Health Score: {data['health_summary']['overall_health_score']}/100")
+            print(f"   Status: {data['health_summary']['status']}")
+            print(f"   Top Priority Actions: {len(data['priority_actions'])} recommendations")
+            print(f"   Predictive Insights: {len(data['predictive_insights'])} alerts")
+    except Exception as e:
+        print(f"⚠️  Insights endpoint not available: {e}")
+
+
 async def main() -> None:
     async with httpx.AsyncClient(timeout=30) as client:
-        print("Phase 1: normal traffic")
+        print("=" * 60)
+        print("LLM Reliability Control Plane - Traffic Generator")
+        print("Demonstrating detection rules and AI-powered insights")
+        print("=" * 60)
+        
+        print("\nPhase 1: Normal traffic")
         await run_phase(client, "normal")
         await asyncio.sleep(10)
+        await get_insights(client)
 
-        print("Phase 2: cost spike via long prompts")
+        print("\nPhase 2: Cost spike via long prompts")
         await run_phase(client, "cost_spike")
         await asyncio.sleep(10)
+        await get_insights(client)
 
-        print("Phase 3: bad prompts causing safety blocks / quality issues")
+        print("\nPhase 3: Bad prompts causing safety blocks / quality issues")
         await run_phase(client, "quality_drop")
         await asyncio.sleep(10)
+        await get_insights(client)
 
-        print("Phase 4: latency and retry spike")
+        print("\nPhase 4: Latency and retry spike")
         await run_phase(client, "latency_spike")
+        await asyncio.sleep(10)
+        await get_insights(client)
+        
+        print("\n" + "=" * 60)
+        print("Traffic generation complete!")
+        print("Check Datadog for:")
+        print("  - Health score metrics")
+        print("  - Triggered monitors")
+        print("  - Auto-created incidents")
+        print("  - AI-powered insights")
+        print("=" * 60)
 
 
 if __name__ == "__main__":

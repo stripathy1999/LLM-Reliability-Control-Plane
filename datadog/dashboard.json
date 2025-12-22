@@ -242,13 +242,61 @@
     {
       "id": 13,
       "definition": {
+        "type": "query_value",
+        "title": "🎯 LLM Health Score (Composite)",
+        "requests": [
+          {
+            "q": "avg:llm.health_score{service:llm-reliability-control-plane}",
+            "aggregator": "last"
+          }
+        ],
+        "precision": 1,
+        "text_align": "center",
+        "custom_unit": "/100",
+        "autoscale": true,
+        "custom_links": []
+      },
+      "layout": {"x": 0, "y": 75, "width": 23, "height": 15}
+    },
+    {
+      "id": 14,
+      "definition": {
+        "type": "timeseries",
+        "title": "Health Score Trend (Composite Metric)",
+        "requests": [
+          {
+            "q": "avg:llm.health_score{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "green_to_orange", "line_type": "solid", "line_width": "thick"}
+          }
+        ],
+        "yaxis": {"label": "Score (0-100)", "min": "0", "max": "100"},
+        "markers": [
+          {
+            "value": "80",
+            "display_type": "ok dashed",
+            "label": "Healthy Threshold"
+          },
+          {
+            "value": "60",
+            "display_type": "warning dashed",
+            "label": "Degraded Threshold"
+          }
+        ],
+        "legend": {"show_legend": false}
+      },
+      "layout": {"x": 23, "y": 75, "width": 47, "height": 15}
+    },
+    {
+      "id": 15,
+      "definition": {
         "type": "note",
-        "content": "## Monitor Status\n\n- **Latency SLO**: p95 < 1500ms\n- **Cost Anomaly**: 2x baseline threshold\n- **Error Burst**: >10 errors in 5m\n- **Quality**: Similarity > 0.4\n- **Safety**: <5 blocks in 10m\n\n## Active Incidents\n\nCheck Datadog Incidents for current alerts with attached context (dashboards, logs, traces).",
+        "content": "## 🚀 Innovation Features\n\n**AI-Powered Insights:**\n- Composite Health Score (0-100)\n- Cost Optimization Recommendations\n- Predictive Anomaly Detection\n- Automated Remediation Suggestions\n\n**Monitor Status:**\n- Latency SLO: p95 < 1500ms\n- Cost Anomaly: 2x baseline\n- Error Burst: >10 errors in 5m\n- Quality: Similarity > 0.4\n- Safety: <5 blocks in 10m\n\n**Active Incidents:**\nCheck Datadog Incidents for alerts with full context.",
         "has_padding": true,
         "font_size": "14",
         "text_align": "left"
       },
-      "layout": {"x": 0, "y": 75, "width": 94, "height": 15}
+      "layout": {"x": 70, "y": 75, "width": 24, "height": 15}
     }
   ],
   "template_variables": [

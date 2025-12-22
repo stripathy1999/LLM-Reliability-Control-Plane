@@ -22,16 +22,27 @@ if os.getenv("DD_TRACE_ENABLED", "true").lower() == "true":
         pass  # ddtrace not installed, continue without APM
 
 from .config import settings
-from .routes import qa, reason, stress
+from .routes import insights, qa, reason, stress
 
 app = FastAPI(
     title=settings.project_name,
     version=settings.datadog_version,
+    description="""
+    LLM Reliability Control Plane with AI-Powered Insights
+    
+    **Innovation Features:**
+    - 🎯 Composite Health Score (0-100) combining all metrics
+    - 💡 AI-Powered Cost Optimization Recommendations
+    - 🔮 Predictive Anomaly Detection
+    - 🛡️ Automated Security Recommendations
+    - 📊 Real-time Quality Analysis
+    """,
 )
 
 app.include_router(qa.router)
 app.include_router(reason.router)
 app.include_router(stress.router)
+app.include_router(insights.router)  # AI-powered insights endpoint
 
 
 @app.get("/health")
