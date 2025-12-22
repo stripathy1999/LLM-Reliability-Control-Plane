@@ -25,8 +25,34 @@ This solution goes beyond standard observability with:
 4. **🛡️ Automated Security Recommendations**: Detects attacks and suggests remediation
 5. **📊 Real-Time Quality Analysis**: Semantic similarity and hallucination detection
 6. **🎨 Intelligent Insights Endpoint**: `/insights` provides comprehensive AI analysis
+7. **🎭 Live Failure Theater**: Beautiful one-click UI to trigger failure scenarios (see below)
 
 See [INNOVATION_FEATURES.md](INNOVATION_FEATURES.md) for detailed explanation of each feature.
+
+## 🎭 Live Failure Theater
+
+**The most memorable part of the demo!** A stunning Next.js UI that lets you trigger production failures with one click.
+
+### Quick Start
+
+```bash
+cd failure-theater
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) and watch incidents get created in real-time!
+
+### Features
+
+- **🔴 Cost Explosion**: One click triggers cost anomaly monitor
+- **🟠 Latency Spike**: Breaches SLO threshold instantly
+- **🔵 Quality Drop**: Degrades similarity score
+- **⚫ Security Attack**: Triggers safety blocks
+
+**Why it's memorable**: Judges see you break production with one click, watch health scores drop, and see Datadog incidents get created automatically. No scripts, no terminal - just pure visual impact.
+
+See [failure-theater/README.md](failure-theater/README.md) for full documentation.
 
 Repo layout:
 
@@ -110,13 +136,19 @@ Structured logs include `prompt_id`, truncated prompt, response preview, and res
 
 ## Running Locally
 
-### 1. Install dependencies
+### Quick Start (5 minutes)
+
+See [QUICK_START.md](QUICK_START.md) for the fastest way to get everything running.
+
+### Full Setup
+
+#### 1. Install Backend Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Start the API
+#### 2. Start the API
 
 ```bash
 uvicorn app.main:app --reload
@@ -124,7 +156,17 @@ uvicorn app.main:app --reload
 
 Open `http://localhost:8000/docs` to explore the endpoints.
 
-### 3. Run the traffic generator
+#### 3. Start Failure Theater UI (Recommended)
+
+```bash
+cd failure-theater
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000` to see the beautiful one-click failure UI.
+
+#### 4. Run the Traffic Generator (Optional)
 
 In a separate terminal:
 
@@ -138,6 +180,10 @@ This will run through:
 2. **Cost spike** (long prompts)
 3. **Quality drop** (bad prompts / safety blocks)
 4. **Latency + retry spike**
+
+### Testing
+
+For complete testing instructions, see [TESTING_GUIDE.md](TESTING_GUIDE.md)
 
 ## Datadog Integration
 

@@ -6,17 +6,18 @@ Use this as a guide for your submission video. Aim for 3 minutes total.
 
 **Key Message**: "This isn't just observability - it's an AI-powered reliability control plane that monitors everything, predicts issues, and recommends solutions."
 
-### 1. Introduction & The Innovation (30 seconds)
+**🎭 START WITH FAILURE THEATER** - This is your most memorable moment!
+
+### 1. Introduction & The "Wow" Moment (30 seconds)
 
 **Script:**
 "Hi, I'm [your name] and this is my LLM Reliability Control Plane for the Datadog hackathon. 
 
-Traditional observability shows you 20+ metrics but doesn't tell you what to do. I've built something different - an **AI-powered reliability control plane** that:
+Watch this - I'm going to break production with one click. [Click Cost Explosion button]
 
-1. Combines all metrics into a single **health score** (0-100)
-2. Provides **AI-powered recommendations** with estimated savings
-3. **Predicts issues** before they happen
-4. Monitors **cost, quality, and security** - not just latency and errors
+See that? Health score dropped from 85 to 45 in seconds. In Datadog, a monitor just triggered and an incident was created automatically with AI recommendations.
+
+This is our **Live Failure Theater** - a beautiful UI that demonstrates our AI-powered reliability control plane. It combines all metrics into a single health score, provides AI recommendations, and predicts issues before they happen.
 
 Every feature answers three questions: What failed? Why did it fail? What should the engineer do next?"
 

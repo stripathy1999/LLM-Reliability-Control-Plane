@@ -107,7 +107,24 @@ This is observability that drives action, not just awareness."
 
 ## 🎬 Key Demo Scenarios
 
-### Scenario 1: Cost Anomaly
+### 🎭 **Scenario 0: Live Failure Theater (START HERE - MOST IMPORTANT)**
+
+**This is your "wow" moment. Do this first.**
+
+1. Open Failure Theater UI: `http://localhost:3000`
+2. Show the beautiful interface: "This is our Live Failure Theater"
+3. Click "Cost Explosion" button
+4. Watch health score drop from 85 to 45 in real-time
+5. Show recommendation: "AI suggests saving 30% by downgrading model"
+6. Say: "In Datadog, you'll see the monitor trigger and incident get created automatically"
+7. Click "Latency Spike" button
+8. Watch health score drop to 55
+9. Show incident count increasing
+10. Say: "This is observability that drives action, not just awareness"
+
+**Why this wins**: Judges see you break production with one click. It's visual, memorable, and shows you care about UX.
+
+### Scenario 1: Cost Anomaly (in Datadog)
 1. Show cost spike on dashboard
 2. Monitor triggers
 3. Incident created with cost recommendations
@@ -148,13 +165,15 @@ This is observability that drives action, not just awareness."
 
 ## 📸 Screenshots to Capture
 
-1. **Dashboard with Health Score** - Shows innovation
-2. **Insights Endpoint Response** - Shows AI recommendations
-3. **Cost Recommendations** - Shows cost observability
-4. **Predictive Alert** - Shows forecasting
-5. **Incident with Context** - Shows automation
-6. **Health Score Monitor** - Shows composite metric
-7. **Component Score Breakdown** - Shows transparency
+1. **🎭 Failure Theater UI** - The "wow" moment (MOST IMPORTANT)
+2. **Health Score Dropping** - Real-time visual impact
+3. **Dashboard with Health Score** - Shows innovation
+4. **Insights Endpoint Response** - Shows AI recommendations
+5. **Cost Recommendations** - Shows cost observability
+6. **Predictive Alert** - Shows forecasting
+7. **Incident with Context** - Shows automation
+8. **Health Score Monitor** - Shows composite metric
+9. **Component Score Breakdown** - Shows transparency
 
 ## 🎯 Winning Formula
 
