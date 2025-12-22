@@ -1,0 +1,121 @@
+{
+  "monitors": [
+    {
+      "name": "LLM p95 Latency SLO Burn",
+      "type": "metric alert",
+      "query": "avg(last_5m):p95:llm.request.latency_ms{service:llm-reliability-control-plane} > 1500",
+      "message": "🚨 **What failed?** p95 latency is breaching SLO threshold (1500ms).\n\n**Why did it fail?** Possible causes:\n- Model overload or rate limiting\n- Upstream Vertex AI latency spike\n- Network issues\n- Recent deployment or config change\n\n**What should the engineer do next?**\n1. Check Datadog APM traces for slow spans\n2. Review recent deployments in the timeline\n3. Check Vertex AI service status\n4. Consider: downgrade model, enable caching, or scale up\n\n**Attached context:** Dashboard, logs, and traces are automatically attached to this incident.",
+      "tags": ["llm", "latency", "slo", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Latency SLO breach still active. Check dashboard for trends.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "LLM Cost Anomaly Detection",
+      "type": "metric alert",
+      "query": "avg(last_5m):sum:llm.cost.usd{service:llm-reliability-control-plane} > 2 * avg(last_1h):sum:llm.cost.usd{service:llm-reliability-control-plane}",
+      "message": "🚨 **What failed?** LLM cost has spiked 2x above baseline while traffic remains stable.\n\n**Why did it fail?** Possible causes:\n- Long context prompts consuming excessive tokens\n- Model upgrade to more expensive tier\n- Prompt engineering changes causing token bloat\n- Token abuse or prompt injection attack\n\n**What should the engineer do next?**\n1. Review cost breakdown by endpoint in dashboard\n2. Check token usage trends (input vs output)\n3. Investigate recent prompt changes\n4. Consider: downgrade model tier, enable response caching, implement rate limiting, or add prompt length limits\n\n**Attached context:** Cost dashboard, token metrics, and recent request logs are attached.",
+      "tags": ["llm", "cost", "anomaly", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Cost anomaly persists. Review token usage patterns.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-3",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "LLM Error Burst / Retry Storm",
+      "type": "metric alert",
+      "query": "sum(last_5m):sum:llm.error.count{service:llm-reliability-control-plane} > 10",
+      "message": "🚨 **What failed?** Error rate has spiked (>10 errors in 5 minutes).\n\n**Why did it fail?** Possible causes:\n- Vertex AI service degradation\n- Authentication/authorization failures\n- Rate limit exceeded\n- Network connectivity issues\n- Invalid prompt format causing API errors\n\n**What should the engineer do next?**\n1. Check error logs for specific error messages\n2. Review APM traces for failed requests\n3. Verify Vertex AI service status\n4. Check authentication credentials\n5. Review retry logic and backoff strategy\n6. Consider: implement circuit breaker, add retry limits, or failover to backup model\n\n**Attached context:** Error logs, failed traces, and error breakdown by endpoint are attached.",
+      "tags": ["llm", "reliability", "errors", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Error burst continues. Check Vertex AI status and credentials.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "LLM Quality Degradation",
+      "type": "metric alert",
+      "query": "avg(last_10m):avg:llm.semantic_similarity_score{service:llm-reliability-control-plane} < 0.4",
+      "message": "🚨 **What failed?** Semantic similarity score has dropped below acceptable threshold (0.4).\n\n**Why did it fail?** Possible causes:\n- Model drift or degradation\n- Prompt engineering changes causing poor responses\n- Context quality issues\n- Model version change\n- Training data contamination\n\n**What should the engineer do next?**\n1. Review quality metrics dashboard for trends\n2. Sample recent responses from logs\n3. Compare current vs baseline similarity scores\n4. Check for recent model or prompt changes\n5. Consider: rollback model version, update prompts, or retrain model\n\n**Attached context:** Quality dashboard, sample responses, and similarity score history are attached.",
+      "tags": ["llm", "quality", "degradation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Quality degradation persists. Review sample responses.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "LLM Safety Block Surge",
+      "type": "metric alert",
+      "query": "sum(last_10m):sum:llm.safety_block.count{service:llm-reliability-control-plane} > 5",
+      "message": "🚨 **What failed?** Safety intervention blocks have surged (>5 in 10 minutes).\n\n**Why did it fail?** Possible causes:\n- Prompt injection attacks\n- Malicious user input\n- Misconfigured safety filters\n- False positives from safety policies\n- Content policy violations\n\n**What should the engineer do next?**\n1. Review blocked prompts in logs\n2. Check for patterns indicating attack (prompt injection, jailbreak attempts)\n3. Verify safety filter configuration\n4. Consider: tighten input validation, update safety policies, or investigate user behavior\n5. If false positives: adjust safety thresholds\n\n**Attached context:** Safety logs, blocked request samples, and security dashboard are attached.",
+      "tags": ["llm", "safety", "security"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Safety blocks continue. Review security dashboard.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    }
+  ]
+}

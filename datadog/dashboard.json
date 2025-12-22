@@ -1,0 +1,267 @@
+{
+  "title": "LLM Reliability Control Plane – Single Pane of Truth",
+  "description": "Comprehensive observability dashboard answering: What failed? Why did it fail? What should the engineer do next?",
+  "layout_type": "ordered",
+  "widgets": [
+    {
+      "id": 1,
+      "definition": {
+        "type": "timeseries",
+        "title": "Request Latency (p50, p95, p99)",
+        "requests": [
+          {
+            "q": "avg:llm.request.latency_ms{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "dog_classic", "line_type": "solid", "line_width": "normal"}
+          },
+          {
+            "q": "p95:llm.request.latency_ms{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "warm", "line_type": "solid", "line_width": "thick"}
+          },
+          {
+            "q": "p99:llm.request.latency_ms{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "cool", "line_type": "dashed", "line_width": "normal"}
+          }
+        ],
+        "yaxis": {"label": "Latency (ms)", "min": "0"},
+        "legend": {"show_legend": true, "legend_size": "0"}
+      },
+      "layout": {"x": 0, "y": 0, "width": 47, "height": 15}
+    },
+    {
+      "id": 2,
+      "definition": {
+        "type": "timeseries",
+        "title": "Request Rate by Endpoint",
+        "requests": [
+          {
+            "q": "sum:llm.request.latency_ms{service:llm-reliability-control-plane} by {endpoint}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "dog_classic"}
+          }
+        ],
+        "yaxis": {"label": "Requests/sec"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 0, "width": 47, "height": 15}
+    },
+    {
+      "id": 3,
+      "definition": {
+        "type": "timeseries",
+        "title": "Error Rate & Retry Count",
+        "requests": [
+          {
+            "q": "sum:llm.error.count{service:llm-reliability-control-plane}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "warm"}
+          },
+          {
+            "q": "avg:llm.retry_count{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "cool"}
+          }
+        ],
+        "yaxis": {"label": "Count"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 15, "width": 47, "height": 15}
+    },
+    {
+      "id": 4,
+      "definition": {
+        "type": "timeseries",
+        "title": "Cost (USD) Over Time",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane}",
+            "display_type": "area",
+            "style": {"palette": "green"}
+          }
+        ],
+        "yaxis": {"label": "USD", "min": "0"},
+        "legend": {"show_legend": false}
+      },
+      "layout": {"x": 47, "y": 15, "width": 47, "height": 15}
+    },
+    {
+      "id": 5,
+      "definition": {
+        "type": "timeseries",
+        "title": "Token Usage (Input vs Output)",
+        "requests": [
+          {
+            "q": "sum:llm.tokens.input{service:llm-reliability-control-plane}",
+            "display_type": "bars",
+            "style": {"palette": "blue"}
+          },
+          {
+            "q": "sum:llm.tokens.output{service:llm-reliability-control-plane}",
+            "display_type": "bars",
+            "style": {"palette": "orange"}
+          }
+        ],
+        "yaxis": {"label": "Tokens"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 30, "width": 47, "height": 15}
+    },
+    {
+      "id": 6,
+      "definition": {
+        "type": "timeseries",
+        "title": "Quality Signals: Semantic Similarity",
+        "requests": [
+          {
+            "q": "avg:llm.semantic_similarity_score{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "purple", "line_type": "solid", "line_width": "thick"}
+          }
+        ],
+        "yaxis": {"label": "Score (0-1)", "min": "0", "max": "1"},
+        "markers": [
+          {
+            "value": "0.4",
+            "display_type": "error dashed",
+            "label": "Degradation Threshold"
+          }
+        ],
+        "legend": {"show_legend": false}
+      },
+      "layout": {"x": 47, "y": 30, "width": 47, "height": 15}
+    },
+    {
+      "id": 7,
+      "definition": {
+        "type": "query_value",
+        "title": "Current SLO Status (p95 Latency)",
+        "requests": [
+          {
+            "q": "p95:llm.request.latency_ms{service:llm-reliability-control-plane}",
+            "aggregator": "last"
+          }
+        ],
+        "precision": 0,
+        "text_align": "center",
+        "custom_links": []
+      },
+      "layout": {"x": 0, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 8,
+      "definition": {
+        "type": "query_value",
+        "title": "Total Cost (Last Hour)",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane}",
+            "aggregator": "sum"
+          }
+        ],
+        "precision": 4,
+        "text_align": "center",
+        "custom_links": []
+      },
+      "layout": {"x": 23, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 9,
+      "definition": {
+        "type": "query_value",
+        "title": "Error Rate (Last 5m)",
+        "requests": [
+          {
+            "q": "sum:llm.error.count{service:llm-reliability-control-plane}",
+            "aggregator": "sum"
+          }
+        ],
+        "precision": 0,
+        "text_align": "center",
+        "custom_links": []
+      },
+      "layout": {"x": 46, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 10,
+      "definition": {
+        "type": "query_value",
+        "title": "Safety Blocks (Last 10m)",
+        "requests": [
+          {
+            "q": "sum:llm.safety_block.count{service:llm-reliability-control-plane}",
+            "aggregator": "sum"
+          }
+        ],
+        "precision": 0,
+        "text_align": "center",
+        "custom_links": []
+      },
+      "layout": {"x": 69, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 11,
+      "definition": {
+        "type": "timeseries",
+        "title": "Security Signals: Prompt Injection Risk & Token Abuse",
+        "requests": [
+          {
+            "q": "sum:llm.security.prompt_injection_risk{service:llm-reliability-control-plane}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "red"}
+          },
+          {
+            "q": "sum:llm.security.token_abuse{service:llm-reliability-control-plane}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "orange"}
+          }
+        ],
+        "yaxis": {"label": "Count"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 60, "width": 47, "height": 15}
+    },
+    {
+      "id": 12,
+      "definition": {
+        "type": "timeseries",
+        "title": "Safety Blocks Over Time",
+        "requests": [
+          {
+            "q": "sum:llm.safety_block.count{service:llm-reliability-control-plane}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "red"}
+          }
+        ],
+        "yaxis": {"label": "Blocks/sec"},
+        "legend": {"show_legend": false}
+      },
+      "layout": {"x": 47, "y": 60, "width": 47, "height": 15}
+    },
+    {
+      "id": 13,
+      "definition": {
+        "type": "note",
+        "content": "## Monitor Status\n\n- **Latency SLO**: p95 < 1500ms\n- **Cost Anomaly**: 2x baseline threshold\n- **Error Burst**: >10 errors in 5m\n- **Quality**: Similarity > 0.4\n- **Safety**: <5 blocks in 10m\n\n## Active Incidents\n\nCheck Datadog Incidents for current alerts with attached context (dashboards, logs, traces).",
+        "has_padding": true,
+        "font_size": "14",
+        "text_align": "left"
+      },
+      "layout": {"x": 0, "y": 75, "width": 94, "height": 15}
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "service",
+      "default": "llm-reliability-control-plane",
+      "prefix": "service"
+    },
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "env"
+    }
+  ],
+  "notify_list": []
+}

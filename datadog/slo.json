@@ -1,0 +1,22 @@
+{
+  "name": "LLM Request Latency SLO",
+  "type": "metric",
+  "description": "p95 latency must be below 1500ms for 99.9% of requests",
+  "query": {
+    "numerator": "p95:llm.request.latency_ms{service:llm-reliability-control-plane} < 1500",
+    "denominator": "p95:llm.request.latency_ms{service:llm-reliability-control-plane}"
+  },
+  "targets": [
+    {
+      "target": 99.9,
+      "timeframe": "30d",
+      "warning": 99.5
+    },
+    {
+      "target": 99.0,
+      "timeframe": "7d",
+      "warning": 98.0
+    }
+  ],
+  "tags": ["llm", "latency", "slo"]
+}
