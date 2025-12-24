@@ -6,7 +6,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
 
-from ..llm_client import llm_client
+from ..llm_client import get_llm_client
 from ..quality_signals import compute_quality_signals
 from ..telemetry import emit_llm_metrics, log_request
 
@@ -38,6 +38,7 @@ async def qa_endpoint(
     prompt_id = str(uuid.uuid4())
     prompt = f"Q: {body.question}\nContext: {body.document or 'N/A'}"
 
+    llm_client = get_llm_client()
     llm_result = await llm_client.generate(
         prompt,
         request_type="qa",

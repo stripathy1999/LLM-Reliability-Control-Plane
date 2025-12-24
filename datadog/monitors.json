@@ -27,8 +27,8 @@
     {
       "name": "LLM Cost Anomaly Detection",
       "type": "metric alert",
-      "query": "avg(last_5m):sum:llm.cost.usd{service:llm-reliability-control-plane} > 2 * avg(last_1h):sum:llm.cost.usd{service:llm-reliability-control-plane}",
-      "message": "🚨 **What failed?** LLM cost has spiked 2x above baseline while traffic remains stable.\n\n**Why did it fail?** Possible causes:\n- Long context prompts consuming excessive tokens\n- Model upgrade to more expensive tier\n- Prompt engineering changes causing token bloat\n- Token abuse or prompt injection attack\n\n**What should the engineer do next?**\n1. Review cost breakdown by endpoint in dashboard\n2. Check token usage trends (input vs output)\n3. Investigate recent prompt changes\n4. Consider: downgrade model tier, enable response caching, implement rate limiting, or add prompt length limits\n\n**Attached context:** Cost dashboard, token metrics, and recent request logs are attached.",
+      "query": "avg(last_5m):sum:llm.cost.usd{service:llm-reliability-control-plane} > 8e-05",
+      "message": "🚨 **What failed?** LLM cost has spiked above the expected threshold while traffic remains stable.\n\n**Why did it fail?** Possible causes:\n- Long context prompts consuming excessive tokens\n- Model upgrade to more expensive tier\n- Prompt engineering changes causing token bloat\n- Token abuse or prompt injection attack\n\n**What should the engineer do next?**\n1. Review cost breakdown by endpoint in dashboard\n2. Check token usage trends (input vs output)\n3. Investigate recent prompt changes\n4. Consider: downgrade model tier, enable response caching, implement rate limiting, or add prompt length limits\n\n**Attached context:** Cost dashboard, token metrics, and recent request logs are attached.",
       "tags": ["llm", "cost", "anomaly", "critical"],
       "options": {
         "notify_audit": true,

@@ -1,14 +1,17 @@
-from pydantic import BaseSettings
+try:
+    from pydantic_settings import BaseSettings
+except ImportError:
+    # Fallback for older pydantic versions
+    from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
     project_name: str = "LLM Reliability Control Plane"
     environment: str = "local"
 
-    # LLM / Vertex AI
-    gemini_model: str = "gemini-1.5-pro"
-    vertex_project_id: str = "your-gcp-project-id"
-    vertex_location: str = "us-central1"
+    # LLM / Gemini API
+    gemini_model: str = "gemini-2.5-flash"  # Updated to valid model name
+    gemini_api_key: str | None = None
 
     # Datadog (used later in instrumentation phase)
     datadog_api_key: str | None = None
@@ -19,6 +22,8 @@ class Settings(BaseSettings):
     class Config:
         env_prefix = "LRCP_"
         env_file = ".env"
+        case_sensitive = False
+        extra = "allow"  # Allow extra fields from environment
 
 
 settings = Settings()

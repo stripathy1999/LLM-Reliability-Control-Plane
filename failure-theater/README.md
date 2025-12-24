@@ -79,3 +79,5 @@ Edit `app/page.tsx` to:
 - **Memorable**: Beautiful UI that stands out
 - **Professional**: Shows you care about UX, not just backend
 
+
+
