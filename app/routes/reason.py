@@ -154,7 +154,7 @@ async def reason_endpoint(
     text = llm_result["text"]
     quality = compute_quality_signals(text)
 
-    # Use unified telemetry (feeds BOTH Datadog + Confluent)
+    # Use unified telemetry (feeds Datadog)
     unified = get_unified_telemetry()
     unified.emit_llm_metrics_unified(
         endpoint="/reason",

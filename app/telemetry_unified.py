@@ -1,9 +1,8 @@
 """
 Unified Telemetry Layer
 
-This module provides unified telemetry that feeds BOTH Datadog (observability)
-and Confluent (streaming) simultaneously. This demonstrates how both platforms
-work together in production.
+This module provides telemetry for Datadog observability.
+All telemetry is sent to Datadog for comprehensive monitoring.
 """
 
 from __future__ import annotations
@@ -32,12 +31,11 @@ except Exception:
 
 class UnifiedTelemetry:
     """
-    Unified telemetry that sends data to BOTH Datadog and Confluent.
+    Unified telemetry that sends data to Datadog.
     
     - Datadog: For comprehensive observability (metrics, traces, logs)
-    - Confluent: For real-time streaming and ML processing
     
-    This shows how both platforms complement each other in production.
+    All LLM telemetry is sent to Datadog for monitoring and analysis.
     """
 
     def __init__(self):
@@ -67,7 +65,7 @@ class UnifiedTelemetry:
         request_id: str,
     ) -> None:
         """
-        Emit metrics to BOTH Datadog and Confluent simultaneously.
+        Emit metrics to Datadog for comprehensive observability.
         
         This is the core unified telemetry function that demonstrates
         how both platforms work together.
@@ -94,8 +92,8 @@ class UnifiedTelemetry:
                 if logger:
                     logger.error(f"Failed to emit to Datadog: {e}")
 
-        # PRIMARY TRACK 2: CONFLUENT (Streaming + ML)
-        if self.confluent_enabled:
+        # Confluent removed - Datadog-only telemetry
+        if False:  # Confluent disabled
             try:
                 # Stream event to Kafka for real-time ML processing
                 metric_event = {
@@ -143,7 +141,7 @@ class UnifiedTelemetry:
                 self.confluent_producer.emit_llm_request(request_event)
             except Exception as e:
                 if logger:
-                    logger.error(f"Failed to emit request to Confluent: {e}")
+                    logger.error(f"Failed to emit request telemetry: {e}")
 
     def emit_llm_response_unified(
         self,
@@ -166,7 +164,7 @@ class UnifiedTelemetry:
                 self.confluent_producer.emit_llm_response(response_event)
             except Exception as e:
                 if logger:
-                    logger.error(f"Failed to emit response to Confluent: {e}")
+                    logger.error(f"Failed to emit response telemetry: {e}")
 
 
 # Global unified telemetry instance

@@ -1,8 +1,8 @@
 """
 Streaming Routes for Real-Time Dashboard
 
-This module provides WebSocket endpoints for real-time streaming of
-Confluent Kafka events and ML insights to the frontend dashboard.
+This module provides WebSocket endpoints for real-time streaming.
+Note: Streaming endpoints are currently disabled as Confluent integration has been removed for Datadog-only submission.
 """
 
 from __future__ import annotations

@@ -184,7 +184,7 @@ async def qa_endpoint(
         }
     )
 
-    # Use unified telemetry (feeds BOTH Datadog + Confluent)
+    # Use unified telemetry (feeds Datadog)
     unified = get_unified_telemetry()
     unified.emit_llm_metrics_unified(
         endpoint="/qa",
@@ -202,7 +202,7 @@ async def qa_endpoint(
         request_id=prompt_id,
     )
     
-    # Also emit request and response events to Confluent
+    # Emit request and response events to Datadog
     unified.emit_llm_request_unified(
         request_id=prompt_id,
         endpoint="/qa",
