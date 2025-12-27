@@ -1,0 +1,275 @@
+{
+  "monitors": [
+    {
+      "name": "AI Engineer Critical: Token Usage Explosion (Input/Output Ratio)",
+      "type": "metric alert",
+      "query": "avg(last_10m):avg:llm.tokens.input{service:llm-reliability-control-plane} / avg(last_10m):avg:llm.tokens.output{service:llm-reliability-control-plane} > 10",
+      "message": "🚨 **AI Engineer Alert: Token Usage Explosion**\n\n**What failed?** Input token to output token ratio has exceeded 10:1, indicating inefficient prompt engineering or context bloat.\n\n**Why did it fail?** Possible causes:\n- Context window bloat (too much irrelevant context)\n- Inefficient prompt engineering (repetitive or verbose prompts)\n- Prompt injection attempts causing token waste\n- Model receiving unnecessarily long documents\n- Context not being properly filtered or summarized\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review recent prompts in logs for verbosity\n   - Check if context summarization is working\n   - Verify prompt templates aren't duplicating content\n\n2. **Investigation:**\n   - Analyze token breakdown by endpoint\n   - Review prompt engineering best practices\n   - Check for prompt injection patterns\n   - Evaluate context filtering mechanisms\n\n3. **Optimization:**\n   - Implement prompt compression\n   - Add context length limits\n   - Optimize prompt templates\n   - Consider RAG (Retrieval Augmented Generation) for large documents\n\n4. **Cost Impact:**\n   - High input tokens = higher costs\n   - Review cost optimization recommendations\n   - Consider model tier optimization\n\n**Attached context:** Token usage dashboard, prompt samples, cost breakdown, and token efficiency metrics.",
+      "tags": ["llm", "tokens", "ai_engineer", "critical", "efficiency", "prompt_engineering"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Token usage explosion persists. Review prompt engineering and context management.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 10,
+          "warning": 7
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Hallucination Detection (Ungrounded Answers)",
+      "type": "metric alert",
+      "query": "sum(last_15m):sum:llm.ungrounded_answer_flag{service:llm-reliability-control-plane} > 5",
+      "message": "🚨 **AI Engineer Alert: Hallucination Detection**\n\n**What failed?** Multiple ungrounded answers detected (>5 in 15 minutes), indicating model is generating information not present in the provided context.\n\n**Why did it fail?** Possible causes:\n- Model generating information not in source documents\n- Context retrieval failing (RAG issues)\n- Model overconfidence in responses\n- Insufficient context provided to model\n- Model version with known hallucination issues\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review flagged responses in logs\n   - Check if source documents contain the information\n   - Verify RAG retrieval accuracy\n\n2. **Investigation:**\n   - Sample ungrounded answers and compare to source\n   - Check semantic similarity scores\n   - Review context retrieval quality\n   - Analyze which endpoints/models are affected\n\n3. **Mitigation:**\n   - Improve prompt engineering (add \"only use provided context\")\n   - Enhance RAG retrieval accuracy\n   - Add fact-checking layer\n   - Consider switching to model with better grounding\n   - Implement confidence thresholds\n\n4. **Quality Impact:**\n   - Hallucinations reduce user trust\n   - May cause incorrect business decisions\n   - Requires immediate attention\n\n**Attached context:** Quality dashboard, ungrounded answer samples, semantic similarity scores, and context retrieval metrics.",
+      "tags": ["llm", "quality", "hallucination", "ai_engineer", "critical", "grounding"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Hallucination detection continues. Review grounding mechanisms and prompt engineering.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Context Window Exhaustion",
+      "type": "metric alert",
+      "query": "avg(last_10m):avg:llm.tokens.input{service:llm-reliability-control-plane} > 8000",
+      "message": "🚨 **AI Engineer Alert: Context Window Exhaustion**\n\n**What failed?** Average input token count exceeds 8000, approaching model context limits and risking truncation.\n\n**Why did it fail?** Possible causes:\n- Documents too long for model context window\n- Context not being properly chunked or summarized\n- Multiple documents concatenated without filtering\n- Prompt templates adding excessive context\n- Context retrieval returning too much information\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Check which endpoints/models are affected\n   - Review document length and chunking strategy\n   - Verify context summarization is working\n\n2. **Investigation:**\n   - Analyze token usage by endpoint\n   - Review context preparation pipeline\n   - Check RAG retrieval parameters\n   - Evaluate prompt template efficiency\n\n3. **Mitigation:**\n   - Implement document chunking\n   - Add context summarization layer\n   - Filter irrelevant context\n   - Use sliding window for long documents\n   - Consider models with larger context windows\n   - Implement context prioritization\n\n4. **Impact:**\n   - Context truncation = information loss\n   - May cause incomplete or inaccurate responses\n   - Increases latency and cost\n\n**Attached context:** Token usage dashboard, context length metrics, document processing logs, and chunking statistics.",
+      "tags": ["llm", "tokens", "context", "ai_engineer", "critical", "context_window"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Context window exhaustion persists. Review document processing and chunking strategy.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 8000,
+          "warning": 6000
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Rate Limiting / Quota Exhaustion",
+      "type": "metric alert",
+      "query": "sum(last_5m):sum:llm.rate_limit.count{service:llm-reliability-control-plane} > 3",
+      "message": "🚨 **AI Engineer Alert: Rate Limiting / Quota Exhaustion**\n\n**What failed?** Multiple rate limit errors detected (>3 in 5 minutes), indicating API quota exhaustion or request throttling.\n\n**Why did it fail?** Possible causes:\n- API quota exceeded (requests per minute/day)\n- Token quota exceeded (tokens per minute/day)\n- Burst traffic exceeding rate limits\n- Missing rate limiting implementation\n- Retry logic causing request amplification\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Check API quota status in provider dashboard\n   - Review request rate patterns\n   - Verify rate limiting is implemented\n   - Check retry logic for exponential backoff\n\n2. **Investigation:**\n   - Analyze request patterns by endpoint\n   - Review traffic spikes\n   - Check for retry storms\n   - Verify quota limits and usage\n\n3. **Mitigation:**\n   - Implement client-side rate limiting\n   - Add request queuing\n   - Implement exponential backoff for retries\n   - Request quota increase from provider\n   - Add circuit breaker pattern\n   - Implement request prioritization\n   - Consider load balancing across API keys\n\n4. **Impact:**\n   - Service degradation for users\n   - Failed requests = poor user experience\n   - May require immediate quota increase\n\n**Attached context:** Error logs, rate limit metrics, request rate dashboard, and quota usage statistics.",
+      "tags": ["llm", "rate_limit", "quota", "ai_engineer", "critical", "reliability"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 900,
+        "escalation_message": "Rate limiting continues. Check API quota and implement rate limiting.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Model Response Consistency Degradation",
+      "type": "metric alert",
+      "query": "stddev(last_30m):avg:llm.semantic_similarity_score{service:llm-reliability-control-plane} > 0.3",
+      "message": "🚨 **AI Engineer Alert: Model Response Consistency Degradation**\n\n**What failed?** High variance in semantic similarity scores (stddev > 0.3), indicating inconsistent model responses.\n\n**Why did it fail?** Possible causes:\n- Model temperature too high (increasing randomness)\n- Non-deterministic model behavior\n- Model version changes\n- Prompt engineering inconsistencies\n- Context quality variations\n- Model drift over time\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review temperature settings\n   - Check for model version changes\n   - Verify prompt consistency\n\n2. **Investigation:**\n   - Analyze response variance by endpoint\n   - Review temperature and sampling parameters\n   - Check model version history\n   - Compare responses for same inputs\n   - Review prompt template variations\n\n3. **Mitigation:**\n   - Lower temperature for more deterministic outputs\n   - Standardize prompt templates\n   - Implement response caching for identical inputs\n   - Consider model version pinning\n   - Add response validation layer\n   - Implement A/B testing for prompt variations\n\n4. **Impact:**\n   - Inconsistent responses = poor user experience\n   - Difficult to debug and reproduce issues\n   - May indicate model quality issues\n\n**Attached context:** Quality dashboard, response variance metrics, temperature settings, and model version history.",
+      "tags": ["llm", "quality", "consistency", "ai_engineer", "critical", "determinism"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Response consistency degradation persists. Review temperature settings and model configuration.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Cost Per Token Efficiency Degradation",
+      "type": "metric alert",
+      "query": "avg(last_30m):avg:llm.cost.usd{service:llm-reliability-control-plane} / avg(last_30m):sum:llm.tokens.total{service:llm-reliability-control-plane} > 0.00001",
+      "message": "🚨 **AI Engineer Alert: Cost Per Token Efficiency Degradation**\n\n**What failed?** Cost per token has increased above threshold, indicating inefficient model usage or tier selection.\n\n**Why did it fail?** Possible causes:\n- Model upgraded to more expensive tier unnecessarily\n- Inefficient prompt engineering (wasting tokens)\n- Using premium models for simple tasks\n- Model routing selecting wrong tier\n- Token pricing changes from provider\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review model tier selection\n   - Check model routing logic\n   - Verify cost per token trends\n\n2. **Investigation:**\n   - Analyze cost per token by endpoint\n   - Review model selection decisions\n   - Compare cost across model tiers\n   - Check for unnecessary model upgrades\n   - Review prompt efficiency\n\n3. **Optimization:**\n   - Optimize model routing (use cheaper models for simple tasks)\n   - Review prompt engineering for efficiency\n   - Implement cost-aware model selection\n   - Consider model tier downgrades where appropriate\n   - Use cost optimization recommendations\n\n4. **Impact:**\n   - Higher costs = budget overruns\n   - May indicate suboptimal model selection\n   - Requires cost optimization review\n\n**Attached context:** Cost dashboard, cost per token metrics, model tier usage, and cost optimization recommendations.",
+      "tags": ["llm", "cost", "efficiency", "ai_engineer", "critical", "optimization"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 3600,
+        "escalation_message": "Cost per token efficiency degradation persists. Review model tier selection and routing.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-3",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Prompt Injection Attack Detection",
+      "type": "metric alert",
+      "query": "sum(last_10m):sum:llm.prompt_injection.detected{service:llm-reliability-control-plane} > 2",
+      "message": "🚨 **AI Engineer Alert: Prompt Injection Attack Detection**\n\n**What failed?** Multiple prompt injection attempts detected (>2 in 10 minutes), indicating potential security attack.\n\n**Why did it fail?** Possible causes:\n- Malicious user attempting to manipulate model behavior\n- Jailbreak attempts to bypass safety filters\n- Prompt injection patterns in user input\n- Insufficient input validation\n- Safety filters not catching all patterns\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review detected injection patterns in logs\n   - Block offending user/IP if applicable\n   - Verify safety filters are active\n   - Check if any injections succeeded\n\n2. **Investigation:**\n   - Analyze injection patterns and techniques\n   - Review user input samples\n   - Check safety filter effectiveness\n   - Verify model responses for manipulation\n   - Review input validation rules\n\n3. **Mitigation:**\n   - Enhance input validation\n   - Update safety filter patterns\n   - Implement prompt sanitization\n   - Add rate limiting for suspicious users\n   - Consider input encoding/escaping\n   - Review and update safety policies\n   - Implement user behavior analysis\n\n4. **Security Impact:**\n   - Prompt injections can manipulate model behavior\n   - May expose sensitive information\n   - Can bypass safety filters\n   - Requires immediate security review\n\n**Attached context:** Security logs, injection pattern samples, safety filter metrics, and user behavior analysis.",
+      "tags": ["llm", "security", "prompt_injection", "ai_engineer", "critical", "attack"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 900,
+        "escalation_message": "Prompt injection attacks continue. Review security filters and input validation.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Model Switching Frequency (Instability Indicator)",
+      "type": "metric alert",
+      "query": "sum(last_30m):sum:llm.model.switch.count{service:llm-reliability-control-plane} > 5",
+      "message": "🚨 **AI Engineer Alert: Excessive Model Switching**\n\n**What failed?** Model has been switched more than 5 times in 30 minutes, indicating system instability or routing issues.\n\n**Why did it fail?** Possible causes:\n- Model routing logic too sensitive\n- Auto-remediation workflows triggering too frequently\n- Model availability issues causing failovers\n- Cost optimization switching models too aggressively\n- Quality degradation triggering switches\n- Routing algorithm instability\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review model switch history\n   - Check routing algorithm stability\n   - Verify auto-remediation thresholds\n\n2. **Investigation:**\n   - Analyze switch triggers (cost, quality, latency)\n   - Review routing decision logic\n   - Check for routing loops or oscillations\n   - Verify model availability\n   - Review auto-remediation workflow triggers\n\n3. **Mitigation:**\n   - Add hysteresis to routing decisions (prevent rapid switching)\n   - Increase thresholds for model switching\n   - Review auto-remediation workflow logic\n   - Implement cooldown periods between switches\n   - Stabilize routing algorithm\n   - Consider manual model selection for stability\n\n4. **Impact:**\n   - Frequent switching = inconsistent behavior\n   - May cause user experience issues\n   - Indicates system instability\n   - Requires routing algorithm review\n\n**Attached context:** Model routing dashboard, switch history, routing decision logs, and auto-remediation workflow execution.",
+      "tags": ["llm", "model_routing", "stability", "ai_engineer", "critical", "instability"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Excessive model switching continues. Review routing algorithm and auto-remediation logic.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Model Availability / Uptime Degradation",
+      "type": "metric alert",
+      "query": "avg(last_15m):avg:llm.model.availability{service:llm-reliability-control-plane} < 0.95",
+      "message": "🚨 **AI Engineer Alert: Model Availability Degradation**\n\n**What failed?** Model availability has dropped below 95%, indicating service reliability issues.\n\n**Why did it fail?** Possible causes:\n- Upstream model provider (Vertex AI/Gemini) service degradation\n- Network connectivity issues\n- Authentication/authorization failures\n- Rate limiting causing service unavailability\n- Model endpoint failures\n- Regional service outages\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Check upstream provider status page\n   - Verify authentication credentials\n   - Check network connectivity\n   - Review error logs for patterns\n\n2. **Investigation:**\n   - Analyze availability by model/endpoint\n   - Review error patterns and types\n   - Check for regional issues\n   - Verify failover mechanisms\n   - Review retry logic effectiveness\n\n3. **Mitigation:**\n   - Implement failover to backup models\n   - Add circuit breaker pattern\n   - Improve retry logic with exponential backoff\n   - Consider multi-region deployment\n   - Implement health checks\n   - Add model availability monitoring\n\n4. **Impact:**\n   - Low availability = poor user experience\n   - May require failover to backup models\n   - Indicates infrastructure reliability issues\n\n**Attached context:** Availability dashboard, error logs, provider status, and failover metrics.",
+      "tags": ["llm", "availability", "uptime", "ai_engineer", "critical", "reliability"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 900,
+        "escalation_message": "Model availability degradation persists. Check upstream provider status and failover mechanisms.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Response Time Degradation (Model Processing)",
+      "type": "metric alert",
+      "query": "avg(last_10m):avg:llm.model.processing_time_ms{service:llm-reliability-control-plane} > 5000",
+      "message": "🚨 **AI Engineer Alert: Model Processing Time Degradation**\n\n**What failed?** Model processing time exceeds 5000ms, indicating model performance issues beyond network latency.\n\n**Why did it fail?** Possible causes:\n- Model overload or throttling\n- Complex prompts requiring longer processing\n- Model version performance regression\n- Context length affecting processing time\n- Model provider infrastructure issues\n- Resource constraints on model side\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Check model provider status\n   - Review processing time by model/endpoint\n   - Verify context length isn't excessive\n\n2. **Investigation:**\n   - Analyze processing time by prompt complexity\n   - Review model version performance\n   - Check for processing time trends\n   - Compare across model tiers\n   - Review context length impact\n\n3. **Mitigation:**\n   - Optimize prompt complexity\n   - Consider model tier upgrade for performance\n   - Implement request prioritization\n   - Add processing time limits\n   - Consider model switching for performance\n   - Review context optimization\n\n4. **Impact:**\n   - Slow processing = poor user experience\n   - May indicate model performance issues\n   - Requires performance optimization\n\n**Attached context:** Performance dashboard, processing time metrics, model version comparison, and context length analysis.",
+      "tags": ["llm", "performance", "processing_time", "ai_engineer", "critical", "latency"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Model processing time degradation persists. Review model performance and optimization opportunities.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 5000,
+          "warning": 3000
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "AI Engineer Critical: Output Token Truncation (Incomplete Responses)",
+      "type": "metric alert",
+      "query": "sum(last_15m):sum:llm.output.truncated{service:llm-reliability-control-plane} > 3",
+      "message": "🚨 **AI Engineer Alert: Output Token Truncation**\n\n**What failed?** Multiple responses truncated (>3 in 15 minutes), indicating output length limits being hit.\n\n**Why did it fail?** Possible causes:\n- Output token limit too restrictive\n- Model generating longer responses than expected\n- Max tokens parameter set too low\n- Response length requirements changed\n- Model behavior change producing longer outputs\n\n**What should the AI engineer do next?**\n1. **Immediate Actions:**\n   - Review max_tokens parameter settings\n   - Check truncated response samples\n   - Verify output length requirements\n\n2. **Investigation:**\n   - Analyze truncation frequency by endpoint\n   - Review max_tokens configuration\n   - Check response length trends\n   - Compare actual vs expected response lengths\n   - Review prompt instructions for length control\n\n3. **Mitigation:**\n   - Increase max_tokens parameter if appropriate\n   - Add prompt instructions for concise responses\n   - Implement response length validation\n   - Consider streaming for long responses\n   - Review and optimize response requirements\n\n4. **Impact:**\n   - Truncated responses = incomplete information\n   - Poor user experience\n   - May miss critical information\n\n**Attached context:** Response length dashboard, truncation metrics, max_tokens configuration, and response samples.",
+      "tags": ["llm", "tokens", "truncation", "ai_engineer", "critical", "completeness"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Output truncation continues. Review max_tokens settings and response length requirements.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    }
+  ],
+  "note": "Critical detection rules specifically designed for AI Engineers. These monitors focus on LLM-specific issues that require AI engineering expertise to resolve. Import into Datadog Monitors → New Monitor → Import JSON."
+}
+

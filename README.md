@@ -24,7 +24,7 @@ This project provides end-to-end observability for LLM applications, answering t
 
 ### 🎯 Core Observability
 - **Composite Health Score (0-100)**: Single metric combining performance, reliability, cost, quality, and security
-- **8 Detection Rules**: 5 threshold monitors + 3 ML-based anomaly detection monitors
+- **18+ Detection Rules**: 7 threshold monitors + 3 ML-based anomaly detection + 4 advanced monitors + 11 AI Engineer critical monitors
 - **Actionable Incidents**: Auto-created with full context, runbooks, and attachments
 - **Comprehensive Dashboard**: Single pane of truth in Datadog with advanced features
 

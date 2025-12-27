@@ -48,6 +48,22 @@ export DD_SITE="datadoghq.com"
 2. **Import Basic Monitors** (`datadog/monitors.json`):
    - Click **Import from JSON**
    - Copy contents of `datadog/monitors.json`
+   - **7 monitors** (latency SLO, cost anomaly, error burst, quality degradation, safety blocks, health score, daily cost budget)
+
+3. **Import ML-Based Anomaly Monitors** (`datadog/monitors_anomaly.json`):
+   - Click **New Monitor** → **Import from JSON**
+   - Copy contents of `datadog/monitors_anomaly.json`
+   - **3 monitors** (ML-based cost, latency, and quality anomaly detection)
+
+4. **Import Advanced Monitors** (`datadog/monitors_advanced.json`):
+   - Click **New Monitor** → **Import from JSON**
+   - Copy contents of `datadog/monitors_advanced.json`
+   - **4 monitors** (composite, predictive, workflow triggers) + multi-alert grouping
+
+5. **Import AI Engineer Critical Monitors** (`datadog/monitors_ai_engineer_critical.json`):
+   - Click **New Monitor** → **Import from JSON**
+   - Copy contents of `datadog/monitors_ai_engineer_critical.json`
+   - **11 monitors** (token usage explosion, hallucination detection, context window exhaustion, rate limiting, response consistency, cost efficiency, prompt injection, model switching, availability, processing time, output truncation)
    - Paste into the import dialog
    - Click **Import**
    - **Repeat for each monitor** (if JSON contains array)
