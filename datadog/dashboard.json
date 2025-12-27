@@ -297,6 +297,131 @@
         "text_align": "left"
       },
       "layout": {"x": 70, "y": 75, "width": 24, "height": 15}
+    },
+    {
+      "id": 16,
+      "definition": {
+        "type": "servicemap",
+        "title": "Service Map - LLM Application Dependencies",
+        "service": "llm-reliability-control-plane",
+        "filters": ["env:production", "env:staging", "env:local"],
+        "custom_links": []
+      },
+      "layout": {"x": 0, "y": 90, "width": 47, "height": 30}
+    },
+    {
+      "id": 17,
+      "definition": {
+        "type": "timeseries",
+        "title": "LLM Observability: Token Usage (Native Metrics)",
+        "requests": [
+          {
+            "q": "sum:llm.request.tokens.input{service:llm-reliability-control-plane} by {llm_model,llm_provider}",
+            "display_type": "bars",
+            "style": {"palette": "blue"}
+          },
+          {
+            "q": "sum:llm.request.tokens.output{service:llm-reliability-control-plane} by {llm_model,llm_provider}",
+            "display_type": "bars",
+            "style": {"palette": "orange"}
+          }
+        ],
+        "yaxis": {"label": "Tokens"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 90, "width": 47, "height": 15}
+    },
+    {
+      "id": 18,
+      "definition": {
+        "type": "timeseries",
+        "title": "LLM Observability: Cost Attribution (Native Metrics)",
+        "requests": [
+          {
+            "q": "sum:llm.request.cost{service:llm-reliability-control-plane} by {llm_model,llm_provider}",
+            "display_type": "area",
+            "style": {"palette": "green"}
+          }
+        ],
+        "yaxis": {"label": "USD", "min": "0"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 105, "width": 47, "height": 15}
+    },
+    {
+      "id": 19,
+      "definition": {
+        "type": "slo",
+        "title": "SLO Burn Widget: p95 Latency",
+        "view_type": "detail",
+        "global_time_target": "99.0",
+        "slo_id": "{{SLO_ID}}",
+        "show_error_budget": true,
+        "view_mode": "overall",
+        "time_windows": ["7d", "30d"]
+      },
+      "layout": {"x": 0, "y": 120, "width": 31, "height": 20}
+    },
+    {
+      "id": 20,
+      "definition": {
+        "type": "timeseries",
+        "title": "Predictive Forecast: Cost Spike (6-hour window)",
+        "requests": [
+          {
+            "q": "forecast(avg(last_1h):sum:llm.cost.usd{service:llm-reliability-control-plane}, 'linear', 6, 'upper')",
+            "display_type": "line",
+            "style": {"palette": "purple", "line_type": "dashed", "line_width": "thick"}
+          },
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {"palette": "green", "line_type": "solid"}
+          }
+        ],
+        "yaxis": {"label": "USD", "min": "0"},
+        "markers": [
+          {
+            "value": "0.5",
+            "display_type": "error dashed",
+            "label": "Forecast Threshold"
+          }
+        ],
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 31, "y": 120, "width": 31, "height": 20}
+    },
+    {
+      "id": 21,
+      "definition": {
+        "type": "group",
+        "title": "Monitor Status Grid",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "definition": {
+              "type": "check_status",
+              "check": "service:llm-reliability-control-plane",
+              "grouping": "check",
+              "group_by": ["monitor"],
+              "tags": ["service:llm-reliability-control-plane"],
+              "title": "Monitor Status Overview"
+            }
+          }
+        ]
+      },
+      "layout": {"x": 62, "y": 120, "width": 32, "height": 20}
+    },
+    {
+      "id": 22,
+      "definition": {
+        "type": "note",
+        "content": "## 📊 LLM Observability Native Widgets\n\n**Token Usage:** Native `llm.request.tokens.*` metrics from Datadog LLM Observability\n**Cost Attribution:** Native `llm.request.cost` metrics with provider/model breakdown\n**Service Map:** Visual dependency mapping of LLM service\n\n## 🔮 Predictive Monitoring\n\n**Cost Forecast:** 6-hour forecast showing predicted cost spike threshold\n**SLO Burn:** Detailed SLO burn widget with error budget tracking\n\n## 📋 Monitor Status\n\n**Monitor Grid:** Real-time status of all LLM monitors with drill-down capability",
+        "has_padding": true,
+        "font_size": "12",
+        "text_align": "left"
+      },
+      "layout": {"x": 0, "y": 140, "width": 94, "height": 10}
     }
   ],
   "template_variables": [

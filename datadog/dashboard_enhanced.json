@@ -1,0 +1,426 @@
+{
+  "title": "LLM Reliability Control Plane – Advanced Observability Dashboard",
+  "description": "Comprehensive observability dashboard with ML-based anomaly detection, trace-log correlation, and advanced Datadog features. Answers: What failed? Why did it fail? What should the engineer do next?",
+  "layout_type": "ordered",
+  "template_variables": [
+    {
+      "name": "service",
+      "default": "llm-reliability-control-plane",
+      "prefix": "service",
+      "available_values": ["llm-reliability-control-plane"]
+    },
+    {
+      "name": "env",
+      "default": "*",
+      "prefix": "env",
+      "available_values": ["local", "staging", "production", "*"]
+    },
+    {
+      "name": "endpoint",
+      "default": "*",
+      "prefix": "endpoint",
+      "available_values": ["/qa", "/reason", "/stress", "/insights", "*"]
+    },
+    {
+      "name": "model",
+      "default": "*",
+      "prefix": "model",
+      "available_values": ["gemini-1.5-pro", "gemini-1.5-flash", "*"]
+    }
+  ],
+  "widgets": [
+    {
+      "id": 1,
+      "definition": {
+        "type": "timeseries",
+        "title": "Request Latency with Anomaly Detection Overlay",
+        "requests": [
+          {
+            "q": "avg:llm.request.latency_ms{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "dog_classic", "line_type": "solid", "line_width": "normal"}
+          },
+          {
+            "q": "p95:llm.request.latency_ms{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "warm", "line_type": "solid", "line_width": "thick"}
+          },
+          {
+            "q": "p99:llm.request.latency_ms{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "cool", "line_type": "dashed", "line_width": "normal"}
+          },
+          {
+            "q": "anomalies(avg(last_15m):p95:llm.request.latency_ms{$service,$env} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {"palette": "red", "line_type": "dotted", "line_width": "thick"},
+            "alias": "Anomaly Detection"
+          }
+        ],
+        "yaxis": {"label": "Latency (ms)", "min": "0"},
+        "markers": [
+          {
+            "value": "y = 1500",
+            "display_type": "error dashed",
+            "label": "SLO Threshold (p95)"
+          }
+        ],
+        "legend": {"show_legend": true, "legend_size": "0"}
+      },
+      "layout": {"x": 0, "y": 0, "width": 47, "height": 15}
+    },
+    {
+      "id": 2,
+      "definition": {
+        "type": "timeseries",
+        "title": "Cost with ML-Based Anomaly Detection",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{$service,$env}",
+            "display_type": "area",
+            "style": {"palette": "green"}
+          },
+          {
+            "q": "anomalies(avg(last_15m):sum:llm.cost.usd{$service,$env} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {"palette": "red", "line_type": "dotted", "line_width": "thick"},
+            "alias": "Cost Anomaly"
+          }
+        ],
+        "yaxis": {"label": "USD", "min": "0"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 0, "width": 47, "height": 15}
+    },
+    {
+      "id": 3,
+      "definition": {
+        "type": "timeseries",
+        "title": "Latency vs Error Rate Correlation",
+        "requests": [
+          {
+            "q": "avg:llm.request.latency_ms{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "blue", "line_type": "solid"},
+            "yaxis": "left"
+          },
+          {
+            "q": "sum:llm.error.count{$service,$env}.as_rate()",
+            "display_type": "line",
+            "style": {"palette": "red", "line_type": "dashed"},
+            "yaxis": "right"
+          }
+        ],
+        "yaxis": {
+          "left": {"label": "Latency (ms)"},
+          "right": {"label": "Error Rate (errors/sec)"}
+        },
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 15, "width": 47, "height": 15}
+    },
+    {
+      "id": 4,
+      "definition": {
+        "type": "timeseries",
+        "title": "Cost vs Quality Correlation",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{$service,$env}",
+            "display_type": "area",
+            "style": {"palette": "green"},
+            "yaxis": "left"
+          },
+          {
+            "q": "avg:llm.semantic_similarity_score{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "purple", "line_type": "solid"},
+            "yaxis": "right"
+          }
+        ],
+        "yaxis": {
+          "left": {"label": "Cost (USD)"},
+          "right": {"label": "Quality Score (0-1)", "min": "0", "max": "1"}
+        },
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 15, "width": 47, "height": 15}
+    },
+    {
+      "id": 5,
+      "definition": {
+        "type": "timeseries",
+        "title": "Token Usage with Efficiency Ratio",
+        "requests": [
+          {
+            "q": "sum:llm.tokens.input{$service,$env}",
+            "display_type": "bars",
+            "style": {"palette": "blue"}
+          },
+          {
+            "q": "sum:llm.tokens.output{$service,$env}",
+            "display_type": "bars",
+            "style": {"palette": "orange"}
+          },
+          {
+            "q": "sum:llm.tokens.output{$service,$env} / sum:llm.tokens.input{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "purple", "line_type": "solid"},
+            "alias": "Efficiency Ratio"
+          }
+        ],
+        "yaxis": {"label": "Tokens"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 30, "width": 47, "height": 15}
+    },
+    {
+      "id": 6,
+      "definition": {
+        "type": "timeseries",
+        "title": "Quality Signals with Anomaly Detection",
+        "requests": [
+          {
+            "q": "avg:llm.semantic_similarity_score{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "purple", "line_type": "solid", "line_width": "thick"}
+          },
+          {
+            "q": "anomalies(avg(last_30m):avg:llm.semantic_similarity_score{$service,$env} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {"palette": "red", "line_type": "dotted", "line_width": "thick"},
+            "alias": "Quality Anomaly"
+          }
+        ],
+        "yaxis": {"label": "Score (0-1)", "min": "0", "max": "1"},
+        "markers": [
+          {
+            "value": "0.4",
+            "display_type": "error dashed",
+            "label": "Degradation Threshold"
+          }
+        ],
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 30, "width": 47, "height": 15}
+    },
+    {
+      "id": 7,
+      "definition": {
+        "type": "query_value",
+        "title": "🎯 Composite Health Score",
+        "requests": [
+          {
+            "q": "avg:llm.health_score{$service,$env}",
+            "aggregator": "last"
+          }
+        ],
+        "precision": 1,
+        "text_align": "center",
+        "custom_unit": "/100",
+        "autoscale": true,
+        "conditional_formats": [
+          {
+            "comparator": ">=",
+            "value": 80,
+            "palette": "green_on_white"
+          },
+          {
+            "comparator": ">=",
+            "value": 60,
+            "palette": "yellow_on_white"
+          },
+          {
+            "comparator": "<",
+            "value": 60,
+            "palette": "red_on_white"
+          }
+        ]
+      },
+      "layout": {"x": 0, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 8,
+      "definition": {
+        "type": "query_value",
+        "title": "Current SLO Status (p95 Latency)",
+        "requests": [
+          {
+            "q": "p95:llm.request.latency_ms{$service,$env}",
+            "aggregator": "last"
+          }
+        ],
+        "precision": 0,
+        "text_align": "center",
+        "custom_unit": "ms",
+        "conditional_formats": [
+          {
+            "comparator": "<=",
+            "value": 1500,
+            "palette": "green_on_white"
+          },
+          {
+            "comparator": ">",
+            "value": 1500,
+            "palette": "red_on_white"
+          }
+        ]
+      },
+      "layout": {"x": 23, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 9,
+      "definition": {
+        "type": "query_value",
+        "title": "Total Cost (Last Hour)",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{$service,$env}",
+            "aggregator": "sum"
+          }
+        ],
+        "precision": 4,
+        "text_align": "center",
+        "custom_unit": "USD"
+      },
+      "layout": {"x": 46, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 10,
+      "definition": {
+        "type": "query_value",
+        "title": "Active Anomalies (ML-Based)",
+        "requests": [
+          {
+            "q": "anomalies(avg(last_15m):sum:llm.cost.usd{$service,$env}, 'basic', 2)",
+            "aggregator": "max"
+          }
+        ],
+        "precision": 1,
+        "text_align": "center",
+        "conditional_formats": [
+          {
+            "comparator": ">=",
+            "value": 1,
+            "palette": "red_on_white"
+          },
+          {
+            "comparator": "<",
+            "value": 1,
+            "palette": "green_on_white"
+          }
+        ]
+      },
+      "layout": {"x": 69, "y": 45, "width": 23, "height": 15}
+    },
+    {
+      "id": 11,
+      "definition": {
+        "type": "timeseries",
+        "title": "Health Score Trend with Component Breakdown",
+        "requests": [
+          {
+            "q": "avg:llm.health_score{$service,$env}",
+            "display_type": "line",
+            "style": {"palette": "green_to_orange", "line_type": "solid", "line_width": "thick"},
+            "alias": "Overall Health"
+          }
+        ],
+        "yaxis": {"label": "Score (0-100)", "min": "0", "max": "100"},
+        "markers": [
+          {
+            "value": "80",
+            "display_type": "ok dashed",
+            "label": "Healthy"
+          },
+          {
+            "value": "60",
+            "display_type": "warning dashed",
+            "label": "Degraded"
+          }
+        ],
+        "legend": {"show_legend": false}
+      },
+      "layout": {"x": 0, "y": 60, "width": 47, "height": 15}
+    },
+    {
+      "id": 12,
+      "definition": {
+        "type": "timeseries",
+        "title": "Security Signals: Prompt Injection & Token Abuse",
+        "requests": [
+          {
+            "q": "sum:llm.security.prompt_injection_risk{$service,$env}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "red"}
+          },
+          {
+            "q": "sum:llm.security.token_abuse{$service,$env}.as_rate()",
+            "display_type": "bars",
+            "style": {"palette": "orange"}
+          }
+        ],
+        "yaxis": {"label": "Count/sec"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 60, "width": 47, "height": 15}
+    },
+    {
+      "id": 13,
+      "definition": {
+        "type": "timeseries",
+        "title": "Performance by Endpoint (Filtered)",
+        "requests": [
+          {
+            "q": "p95:llm.request.latency_ms{$service,$env,$endpoint} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {"label": "p95 Latency (ms)"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 0, "y": 75, "width": 47, "height": 15}
+    },
+    {
+      "id": 14,
+      "definition": {
+        "type": "timeseries",
+        "title": "Cost by Endpoint (Filtered)",
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{$service,$env,$endpoint} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {"label": "Cost (USD)"},
+        "legend": {"show_legend": true}
+      },
+      "layout": {"x": 47, "y": 75, "width": 47, "height": 15}
+    },
+    {
+      "id": 15,
+      "definition": {
+        "type": "note",
+        "content": "## 🚀 Advanced Datadog Features\n\n**ML-Based Anomaly Detection:**\n- Cost anomaly detection using Datadog ML\n- Latency anomaly detection\n- Quality degradation anomaly detection\n\n**Trace-Log Correlation:**\n- Custom spans for LLM operations\n- Trace IDs in logs and metrics\n- Full correlation across signals\n\n**Custom Spans:**\n- `llm.gemini.generate` - Main LLM operation\n- `llm.token_counting` - Token operations\n- `llm.cost_calculation` - Cost computation\n- `llm.quality_scoring` - Quality analysis\n\n**Notebooks:**\n- Root Cause Analysis Notebook\n- Cost Optimization Notebook\n\n**Service Map:**\n- Service dependencies visualized\n- Endpoint relationships mapped",
+        "has_padding": true,
+        "font_size": "14",
+        "text_align": "left"
+      },
+      "layout": {"x": 0, "y": 90, "width": 47, "height": 15}
+    },
+    {
+      "id": 16,
+      "definition": {
+        "type": "note",
+        "content": "## 📊 Monitor Status\n\n**Threshold Monitors:**\n- Latency SLO: p95 < 1500ms\n- Error Burst: >10 errors in 5m\n- Quality: Similarity > 0.4\n- Safety: <5 blocks in 10m\n\n**ML-Based Anomaly Monitors:**\n- Cost Anomaly Detection\n- Latency Anomaly Detection\n- Quality Anomaly Detection\n\n**Active Incidents:**\nCheck Datadog Incidents for alerts with:\n- Full context (dashboard, logs, traces)\n- Runbooks\n- AI-powered recommendations",
+        "has_padding": true,
+        "font_size": "14",
+        "text_align": "left"
+      },
+      "layout": {"x": 47, "y": 90, "width": 47, "height": 15}
+    }
+  ],
+  "notify_list": []
+}
+
+

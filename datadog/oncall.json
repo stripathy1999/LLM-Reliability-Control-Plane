@@ -1,0 +1,169 @@
+{
+  "escalation_policies": [
+    {
+      "name": "LLM Critical Errors",
+      "description": "Escalation policy for critical LLM errors",
+      "urgency": "high",
+      "steps": [
+        {
+          "step": 1,
+          "notification": {
+            "type": "slack",
+            "channel": "#llm-alerts",
+            "message": "Critical LLM error detected. On-call engineer notified."
+          },
+          "timeout_minutes": 5
+        },
+        {
+          "step": 2,
+          "notification": {
+            "type": "email",
+            "recipients": ["oncall@example.com"],
+            "subject": "Critical LLM Error - Escalation"
+          },
+          "timeout_minutes": 15
+        },
+        {
+          "step": 3,
+          "notification": {
+            "type": "pagerduty",
+            "severity": "critical",
+            "summary": "Critical LLM error - Escalated"
+          },
+          "timeout_minutes": 0
+        }
+      ]
+    },
+    {
+      "name": "LLM Cost Alerts",
+      "description": "Escalation policy for cost-related alerts",
+      "urgency": "medium",
+      "steps": [
+        {
+          "step": 1,
+          "notification": {
+            "type": "slack",
+            "channel": "#llm-cost-alerts",
+            "message": "LLM cost alert triggered. Review in Datadog dashboard."
+          },
+          "timeout_minutes": 30
+        },
+        {
+          "step": 2,
+          "notification": {
+            "type": "email",
+            "recipients": ["cost-alerts@example.com"],
+            "subject": "LLM Cost Alert"
+          },
+          "timeout_minutes": 0
+        }
+      ]
+    },
+    {
+      "name": "LLM Quality Degradation",
+      "description": "Escalation policy for quality degradation alerts",
+      "urgency": "medium",
+      "steps": [
+        {
+          "step": 1,
+          "notification": {
+            "type": "slack",
+            "channel": "#llm-quality",
+            "message": "LLM quality degradation detected. Review quality metrics."
+          },
+          "timeout_minutes": 60
+        }
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "name": "Primary LLM On-Call",
+      "description": "Primary on-call schedule for LLM reliability team",
+      "timezone": "America/New_York",
+      "rotations": [
+        {
+          "users": ["engineer1@example.com", "engineer2@example.com"],
+          "rotation_type": "weekly",
+          "start_time": "2024-01-01T09:00:00Z"
+        }
+      ],
+      "escalation_policy": "LLM Critical Errors"
+    },
+    {
+      "name": "LLM Cost Team On-Call",
+      "description": "On-call schedule for cost optimization team",
+      "timezone": "America/New_York",
+      "rotations": [
+        {
+          "users": ["cost-engineer@example.com"],
+          "rotation_type": "daily",
+          "start_time": "2024-01-01T09:00:00Z"
+        }
+      ],
+      "escalation_policy": "LLM Cost Alerts"
+    }
+  ],
+  "oncall_rules": [
+    {
+      "name": "Auto-Page on Critical Error with Incident Correlation",
+      "description": "Automatically pages on-call when critical error monitor triggers and correlates with incident",
+      "trigger": {
+        "type": "monitor",
+        "monitor_name": "LLM Error Burst / Retry Storm",
+        "conditions": {
+          "alert": "triggered",
+          "severity": "SEV-1"
+        }
+      },
+      "action": {
+        "type": "page_oncall",
+        "schedule": "Primary LLM On-Call",
+        "escalation_policy": "LLM Critical Errors",
+        "message": "Critical LLM error detected. Monitor: LLM Error Burst / Retry Storm",
+        "correlate_incident": true,
+        "attach_context": {
+          "dashboard": "LLM Reliability Control Plane",
+          "logs": "service:llm-reliability-control-plane status:error",
+          "traces": "service:llm-reliability-control-plane error:true"
+        }
+      }
+    },
+    {
+      "name": "On-Call Incident Correlation",
+      "description": "Correlates incidents with on-call schedules for better context",
+      "trigger": {
+        "type": "incident",
+        "conditions": {
+          "severity": ["SEV-1", "SEV-2"],
+          "status": "active"
+        }
+      },
+      "action": {
+        "type": "notify_oncall",
+        "correlate_with_monitor": true,
+        "attach_incident_context": true,
+        "include_escalation_history": true
+      }
+    },
+    {
+      "name": "Notify Cost Team on Budget Alert",
+      "description": "Notifies cost team when daily budget is exceeded",
+      "trigger": {
+        "type": "monitor",
+        "monitor_name": "LLM Daily Cost Budget Alert",
+        "conditions": {
+          "alert": "triggered"
+        }
+      },
+      "action": {
+        "type": "notify_oncall",
+        "schedule": "LLM Cost Team On-Call",
+        "escalation_policy": "LLM Cost Alerts",
+        "message": "Daily LLM cost budget exceeded. Review in Datadog dashboard."
+      }
+    }
+  ],
+  "note": "These configurations can be imported into Datadog On-Call. Update email addresses, Slack channels, and PagerDuty integration details with your actual values."
+}
+

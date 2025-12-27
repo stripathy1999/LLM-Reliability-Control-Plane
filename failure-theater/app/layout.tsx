@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import DatadogRUM from './components/DatadogRUM'
 
 export const metadata: Metadata = {
-  title: 'Live Failure Theater - LLM Reliability Control Plane',
-  description: 'One-click failure scenarios for LLM observability demo',
+  title: 'LLM Reliability Control Plane',
+  description: 'Live Failure Theater',
 }
 
 export default function RootLayout({
@@ -13,10 +14,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <DatadogRUM />
+        {children}
+      </body>
     </html>
   )
 }
+
 
 
 

@@ -9,6 +9,14 @@ from typing import Any, Dict, Iterator
 
 from .config import settings
 
+# Datadog tracing for trace-log correlation
+try:
+    from ddtrace import tracer
+    DD_TRACING_ENABLED = True
+except ImportError:
+    DD_TRACING_ENABLED = False
+    tracer = None
+
 # Configure structured logging for Datadog
 logger = logging.getLogger("llm_reliability_control_plane")
 logger.setLevel(logging.INFO)
@@ -70,23 +78,35 @@ def record_latency(
 
 
 def emit_histogram(name: str, value: float, *, tags: Dict[str, str] | None = None) -> None:
+    """Emit histogram metric with error handling and fallback."""
     tag_list = _tags(tags)
     if statsd:
-        statsd.histogram(name, value, tags=tag_list)
+        try:
+            statsd.histogram(name, value, tags=tag_list)
+        except Exception as e:
+            logger.warning(f"Failed to emit histogram {name}: {e}")
     logger.info("metric_histogram %s=%s tags=%s", name, value, tag_list)
 
 
 def emit_counter(name: str, value: int = 1, *, tags: Dict[str, str] | None = None) -> None:
+    """Emit counter metric with error handling and fallback."""
     tag_list = _tags(tags)
     if statsd:
-        statsd.increment(name, value, tags=tag_list)
+        try:
+            statsd.increment(name, value, tags=tag_list)
+        except Exception as e:
+            logger.warning(f"Failed to emit counter {name}: {e}")
     logger.info("metric_counter %s+=%s tags=%s", name, value, tag_list)
 
 
 def emit_gauge(name: str, value: float, *, tags: Dict[str, str] | None = None) -> None:
+    """Emit gauge metric with error handling and fallback."""
     tag_list = _tags(tags)
     if statsd:
-        statsd.gauge(name, value, tags=tag_list)
+        try:
+            statsd.gauge(name, value, tags=tag_list)
+        except Exception as e:
+            logger.warning(f"Failed to emit gauge {name}: {e}")
     logger.info("metric_gauge %s=%s tags=%s", name, value, tag_list)
 
 
@@ -105,12 +125,27 @@ def emit_llm_metrics(
     cost_usd: float,
     quality: Dict[str, Any],
 ) -> None:
+    # Get trace ID and span ID for correlation
+    trace_id = None
+    span_id = None
+    if DD_TRACING_ENABLED and tracer:
+        current_span = tracer.current_span()
+        if current_span:
+            trace_id = str(current_span.trace_id)
+            span_id = str(current_span.span_id)
+    
     base_tags = {
         "endpoint": endpoint,
         "model": model,
         "model_version": model_version,
         "request_type": request_type,
     }
+    
+    # Add trace correlation tags to metrics
+    if trace_id:
+        base_tags["dd.trace_id"] = trace_id
+    if span_id:
+        base_tags["dd.span_id"] = span_id
 
     # Performance
     emit_histogram("llm.request.latency_ms", latency_ms, tags=base_tags)
@@ -165,9 +200,18 @@ def log_request(
     metadata: Dict[str, Any],
 ) -> None:
     """
-    Emit structured log for Datadog ingestion.
+    Emit structured log for Datadog ingestion with full trace correlation.
     These logs will be automatically attached to incidents and traces.
     """
+    # Get trace ID and span ID for correlation
+    trace_id = None
+    span_id = None
+    if DD_TRACING_ENABLED and tracer:
+        current_span = tracer.current_span()
+        if current_span:
+            trace_id = str(current_span.trace_id)
+            span_id = str(current_span.span_id)
+    
     truncated_prompt = (prompt[:200] + "...") if len(prompt) > 200 else prompt
     log_payload = {
         "prompt_id": prompt_id,
@@ -181,6 +225,13 @@ def log_request(
         "dd.env": settings.datadog_env,
         "dd.version": settings.datadog_version,
     }
+    
+    # Add trace correlation IDs (critical for trace-log correlation)
+    if trace_id:
+        log_payload["dd.trace_id"] = trace_id
+    if span_id:
+        log_payload["dd.span_id"] = span_id
+    
     # Use JSON logging if available, otherwise structured string
     try:
         logger.info("llm_request", extra=log_payload)

@@ -1,0 +1,85 @@
+{
+  "monitors": [
+    {
+      "name": "LLM Cost Anomaly Detection (ML-Based)",
+      "type": "query alert",
+      "query": "anomalies(avg(last_15m):sum:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2, direction='above', alert_window='last_15m', interval=60, count_default_zero='true') >= 1",
+      "message": "🚨 **What failed?** ML-based anomaly detection has identified an unusual cost spike.\n\n**Why did it fail?** Datadog's anomaly detection algorithm has detected that cost metrics deviate significantly from the expected baseline pattern. This could indicate:\n- Unexpected token usage patterns\n- Model tier changes\n- Prompt engineering changes causing token bloat\n- Potential token abuse or prompt injection attacks\n\n**What should the engineer do next?**\n1. Review the anomaly detection graph in Datadog to see the deviation pattern\n2. Check cost breakdown by endpoint in the dashboard\n3. Review token usage trends (input vs output)\n4. Investigate recent prompt changes or model upgrades\n5. Consider: downgrade model tier, enable response caching, implement rate limiting, or add prompt length limits\n\n**Attached context:** Cost dashboard, token metrics, anomaly detection graph, and recent request logs are attached.\n\n**Innovation:** This monitor uses Datadog's ML-based anomaly detection instead of simple thresholds, providing more intelligent alerting.",
+      "tags": ["llm", "cost", "anomaly", "ml", "innovation", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Cost anomaly persists. Review anomaly detection graph for patterns.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 1
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-3",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "LLM Latency Anomaly Detection (ML-Based)",
+      "type": "query alert",
+      "query": "anomalies(avg(last_15m):p95:llm.request.latency_ms{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2, direction='above', alert_window='last_15m', interval=60, count_default_zero='true') >= 1",
+      "message": "🚨 **What failed?** ML-based anomaly detection has identified unusual latency patterns.\n\n**Why did it fail?** Datadog's anomaly detection algorithm has detected that latency metrics deviate significantly from the expected baseline pattern. This could indicate:\n- Model overload or rate limiting\n- Upstream Vertex AI latency spike\n- Network issues\n- Recent deployment or config change\n- Unusual traffic patterns\n\n**What should the engineer do next?**\n1. Review the anomaly detection graph to see the deviation pattern\n2. Check APM traces for slow spans\n3. Review recent deployments in the timeline\n4. Check Vertex AI service status\n5. Consider: downgrade model, enable caching, or scale up\n\n**Attached context:** Latency dashboard, APM traces, anomaly detection graph, and recent request logs are attached.\n\n**Innovation:** This monitor uses Datadog's ML-based anomaly detection to identify unusual latency patterns that might not trigger simple threshold alerts.",
+      "tags": ["llm", "latency", "anomaly", "ml", "innovation", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Latency anomaly persists. Check anomaly detection graph for patterns.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 1
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "LLM Quality Degradation Anomaly (ML-Based)",
+      "type": "query alert",
+      "query": "anomalies(avg(last_30m):avg:llm.semantic_similarity_score{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2, direction='below', alert_window='last_30m', interval=60, count_default_zero='true') >= 1",
+      "message": "🚨 **What failed?** ML-based anomaly detection has identified unusual quality degradation patterns.\n\n**Why did it fail?** Datadog's anomaly detection algorithm has detected that semantic similarity scores deviate significantly from the expected baseline pattern. This could indicate:\n- Model drift or degradation\n- Prompt engineering changes causing poor responses\n- Context quality issues\n- Model version change\n- Training data contamination\n\n**What should the engineer do next?**\n1. Review the anomaly detection graph to see the quality deviation pattern\n2. Review quality metrics dashboard for trends\n3. Sample recent responses from logs\n4. Compare current vs baseline similarity scores\n5. Check for recent model or prompt changes\n6. Consider: rollback model version, update prompts, or retrain model\n\n**Attached context:** Quality dashboard, sample responses, anomaly detection graph, and similarity score history are attached.\n\n**Innovation:** This monitor uses ML-based anomaly detection to catch quality issues that might not be caught by simple threshold monitors.",
+      "tags": ["llm", "quality", "anomaly", "ml", "innovation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 0,
+        "escalation_message": "Quality anomaly persists. Review anomaly detection graph for patterns.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 1
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    }
+  ]
+}
+
+

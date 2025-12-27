@@ -1,0 +1,169 @@
+{
+  "monitors": [
+    {
+      "name": "Composite: Health Score Degradation with Multiple Failures",
+      "type": "composite",
+      "query": "composite(avg(last_10m):avg:llm.health_score{service:llm-reliability-control-plane} < 60 AND avg(last_10m):avg:llm.request.latency_ms{service:llm-reliability-control-plane} > 2000 AND avg(last_10m):avg:llm.semantic_similarity_score{service:llm-reliability-control-plane} < 0.5)",
+      "message": "🚨 **What failed?** Composite health score is degraded (<60) AND multiple dimensions are failing simultaneously:\n- Health Score: <60 (degraded)\n- Latency: >2000ms (high)\n- Quality: <0.5 (degraded)\n\n**Why did it fail?** Multiple system components are failing simultaneously, indicating a broader system issue rather than an isolated problem.\n\n**What should the engineer do next?**\n1. Review composite health score breakdown in dashboard\n2. Check which specific dimensions are failing (performance, reliability, cost, quality, security)\n3. Review recent deployments or configuration changes\n4. Check infrastructure health (CPU, memory, network)\n5. Consider: system-wide rollback, infrastructure scaling, or emergency mitigation\n\n**Attached context:** Full dashboard, logs, traces, and infrastructure metrics are attached.",
+      "tags": ["llm", "health", "composite", "multi_dimension", "critical", "innovation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 3600,
+        "escalation_message": "Multiple dimensions still failing. System-wide investigation required.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "Predictive: Cost Spike Forecast (6-hour window)",
+      "type": "forecast alert",
+      "query": "forecast(avg(last_1h):sum:llm.cost.usd{service:llm-reliability-control-plane}, 'linear', 6, 'upper') > 0.5",
+      "message": "🔮 **Predictive Alert:** Forecast predicts cost spike within 6 hours.\n\n**What failed?** Based on current trends, the system forecasts that LLM costs will exceed $0.50 within the next 6 hours if current patterns continue.\n\n**Why did it fail?** Cost trends are increasing at a rate that, if sustained, will breach budget thresholds.\n\n**What should the engineer do next?**\n1. Review cost trends in dashboard (look for upward trajectory)\n2. Identify which endpoints/models are driving cost increase\n3. Consider proactive measures:\n   - Enable response caching\n   - Switch high-volume requests to lower-cost models\n   - Implement rate limiting\n   - Scale down non-critical workloads\n4. Monitor cost trends closely over next 6 hours\n\n**Attached context:** Cost dashboard with forecast visualization, cost breakdown by endpoint/model, and token usage trends.",
+      "tags": ["llm", "cost", "predictive", "forecast", "innovation", "proactive"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 3600,
+        "thresholds": {
+          "warning": 0.4,
+          "critical": 0.5
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-3",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    },
+    {
+      "name": "Workflow Trigger: Latency SLO Breach with Auto-Remediation",
+      "type": "metric alert",
+      "query": "avg(last_5m):p95:llm.request.latency_ms{service:llm-reliability-control-plane} > 1500",
+      "message": "🔄 **Workflow-Triggered Alert:** Latency SLO breach detected. Workflow automation will attempt auto-remediation.\n\n**What failed?** p95 latency is breaching SLO threshold (1500ms).\n\n**Why did it fail?** Possible causes:\n- Model overload or rate limiting\n- Upstream Vertex AI latency spike\n- Network issues\n- Recent deployment or config change\n\n**What should the engineer do next?**\n1. Workflow automation is attempting remediation (enabling caching)\n2. Monitor dashboard to see if latency improves\n3. If workflow succeeds, latency should decrease within 5 minutes\n4. If workflow fails or latency persists, investigate:\n   - Check Vertex AI service status\n   - Review APM traces for slow spans\n   - Check network connectivity\n   - Review recent deployments\n\n**Attached context:** Dashboard, logs, traces, and workflow execution logs are attached.",
+      "tags": ["llm", "latency", "slo", "workflow", "auto_remediation", "innovation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Latency SLO breach persists after workflow remediation. Manual intervention required.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      },
+      "workflow_trigger": {
+        "workflow_name": "Auto-Remediate Latency Spike",
+        "auto_trigger": true
+      }
+    },
+    {
+      "name": "Workflow Trigger: Cost Spike with Auto-Scale Down",
+      "type": "metric alert",
+      "query": "avg(last_5m):sum:llm.cost.usd{service:llm-reliability-control-plane} > 8e-05",
+      "message": "🔄 **Workflow-Triggered Alert:** Cost spike detected. Workflow automation will attempt auto-remediation.\n\n**What failed?** LLM cost has spiked above threshold. Workflow will switch to lower-cost model.\n\n**Why did it fail?** Possible causes:\n- Long context prompts consuming excessive tokens\n- Model upgrade to more expensive tier\n- Prompt engineering changes causing token bloat\n- Token abuse or prompt injection attack\n\n**What should the engineer do next?**\n1. Workflow automation is attempting remediation (switching to gemini-1.5-flash)\n2. Monitor dashboard to see if cost decreases\n3. Review cost breakdown by endpoint/model\n4. If workflow succeeds, cost should decrease within next requests\n5. If cost persists, investigate token usage patterns\n\n**Attached context:** Cost dashboard, workflow execution logs, and token usage breakdown.",
+      "tags": ["llm", "cost", "workflow", "auto_remediation", "innovation"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": false,
+        "notify_no_data": false,
+        "renotify_interval": 1800,
+        "escalation_message": "Cost spike persists after workflow remediation. Review token usage patterns.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-3",
+        "attach_dashboard": true,
+        "attach_logs": true
+      },
+      "workflow_trigger": {
+        "workflow_name": "Auto-Remediate Cost Spike",
+        "auto_trigger": true
+      }
+    }
+  ],
+  "alert_groups": [
+    {
+      "name": "LLM Multi-Dimension Failure Group",
+      "description": "Groups related alerts from multiple dimensions (latency, cost, quality, errors) into a single incident",
+      "enabled": true,
+      "grouping": {
+        "type": "multi_alert",
+        "group_by": ["service", "env"],
+        "time_window_seconds": 300
+      },
+      "triggers": [
+        {
+          "monitor_names": [
+            "LLM p95 Latency SLO Burn",
+            "LLM Cost Anomaly Detection",
+            "LLM Quality Degradation",
+            "LLM Error Burst / Retry Storm"
+          ],
+          "condition": "any"
+        }
+      ],
+      "notification": {
+        "message": "🚨 **Multi-Dimension Alert Group:** Multiple related alerts detected within 5-minute window.\n\n**Grouped Alerts:**\n- See attached alerts for details\n\n**What should the engineer do next?**\n1. Review all grouped alerts to understand full scope\n2. Check composite health score\n3. Investigate root cause affecting multiple dimensions\n4. Review infrastructure health\n5. Consider system-wide mitigation\n\n**Attached:** All individual alerts and full dashboard context."
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-1",
+        "attach_dashboard": true,
+        "attach_logs": true,
+        "attach_traces": true
+      }
+    },
+    {
+      "name": "LLM Cost and Quality Correlation Group",
+      "description": "Groups cost and quality alerts that often correlate (high cost with low quality indicates inefficient model usage)",
+      "enabled": true,
+      "grouping": {
+        "type": "multi_alert",
+        "group_by": ["service", "endpoint"],
+        "time_window_seconds": 600
+      },
+      "triggers": [
+        {
+          "monitor_names": [
+            "LLM Cost Anomaly Detection",
+            "LLM Quality Degradation"
+          ],
+          "condition": "all"
+        }
+      ],
+      "notification": {
+        "message": "🔗 **Correlated Alert Group:** Cost spike and quality degradation detected simultaneously.\n\n**Correlation Insight:** High cost with low quality suggests:\n- Inefficient model selection (expensive model producing poor results)\n- Model degradation affecting both cost and quality\n- Need for model optimization\n\n**What should the engineer do next?**\n1. Review model performance metrics\n2. Consider switching to different model tier\n3. Review prompt engineering\n4. Check for model version changes\n5. Optimize model selection based on use case\n\n**Attached:** Cost dashboard, quality metrics, and model comparison."
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
+    }
+  ],
+  "note": "Advanced monitors including composite, predictive, workflow triggers, and multi-alert grouping. Import into Datadog Monitors → New Monitor → Import JSON."
+}
+

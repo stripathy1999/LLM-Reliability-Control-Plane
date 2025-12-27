@@ -19,6 +19,14 @@ class Settings(BaseSettings):
     datadog_service: str = "llm-reliability-control-plane"
     datadog_version: str = "0.1.0"
 
+    # Google Cloud Vertex AI
+    gcp_project_id: str | None = None
+    gcp_region: str = "us-central1"
+    vertex_ai_cost_endpoint: str | None = None
+    vertex_ai_quality_endpoint: str | None = None
+    vertex_ai_anomaly_endpoint: str | None = None
+    vertex_ai_router_endpoint: str | None = None
+
     class Config:
         env_prefix = "LRCP_"
         env_file = ".env"

@@ -1,0 +1,181 @@
+{
+  "name": "LLM Cost Optimization Analysis",
+  "type": "notebook",
+  "cells": [
+    {
+      "type": "markdown",
+      "content": "# 💰 LLM Cost Optimization Analysis\n\nThis notebook provides comprehensive cost analysis and optimization recommendations for LLM applications.\n\n## Purpose\n- Identify cost anomalies and trends\n- Analyze token usage patterns\n- Compare cost across endpoints and models\n- Generate cost optimization recommendations"
+    },
+    {
+      "type": "markdown",
+      "content": "## 📊 Cost Overview"
+    },
+    {
+      "type": "timeseries",
+      "title": "Total Cost Over Time",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane}",
+            "display_type": "area",
+            "style": {
+              "palette": "green"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Cost (USD)",
+          "min": 0
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost per Request",
+      "definition": {
+        "requests": [
+          {
+            "q": "avg:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "label": "Cost per Request (USD)"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 🎯 Token Usage Analysis"
+    },
+    {
+      "type": "timeseries",
+      "title": "Input vs Output Tokens",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.tokens.input{service:llm-reliability-control-plane}",
+            "display_type": "bars",
+            "style": {
+              "palette": "blue"
+            },
+            "yaxis": "left"
+          },
+          {
+            "q": "sum:llm.tokens.output{service:llm-reliability-control-plane}",
+            "display_type": "bars",
+            "style": {
+              "palette": "orange"
+            },
+            "yaxis": "left"
+          }
+        ],
+        "yaxis": {
+          "left": {
+            "label": "Tokens"
+          }
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Token Efficiency (Output/Input Ratio)",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.tokens.output{service:llm-reliability-control-plane} / sum:llm.tokens.input{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {
+              "palette": "purple"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Efficiency Ratio",
+          "min": 0
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 🔍 Cost Anomaly Detection"
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost Anomaly Score (ML-Based)",
+      "definition": {
+        "requests": [
+          {
+            "q": "anomalies(avg(last_15m):sum:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {
+              "palette": "warm"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Anomaly Score"
+        },
+        "markers": [
+          {
+            "value": "y = 1",
+            "display_type": "error dashed",
+            "label": "Anomaly Threshold"
+          }
+        ]
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 📈 Optimization Opportunities"
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost by Model Version",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane} by {model_version}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "label": "Cost (USD)"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Average Cost per Request by Endpoint",
+      "definition": {
+        "requests": [
+          {
+            "q": "avg:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "label": "Avg Cost per Request (USD)"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 💡 Recommendations\n\nBased on the analysis above:\n\n1. **High Cost Endpoints:** Identify endpoints with highest cost per request\n2. **Token Efficiency:** Review token usage patterns and optimize prompts\n3. **Model Selection:** Consider downgrading to cheaper models for non-critical requests\n4. **Caching:** Implement response caching for repeated queries\n5. **Rate Limiting:** Add rate limits to prevent token abuse"
+    }
+  ]
+}
+
+

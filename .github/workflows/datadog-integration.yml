@@ -1,0 +1,81 @@
+name: Datadog CI/CD Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  deployment:
+    branches: [ main, master ]
+
+env:
+  DD_API_KEY: ${{ secrets.DD_API_KEY }}
+  DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+  DD_SITE: ${{ secrets.DD_SITE || 'datadoghq.com' }}
+
+jobs:
+  deploy-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Deployment Event to Datadog
+        uses: DataDog/datadog-ci@v2
+        with:
+          api_key: ${{ secrets.DD_API_KEY }}
+          app_key: ${{ secrets.DD_APP_KEY }}
+          site: ${{ secrets.DD_SITE || 'datadoghq.com' }}
+          command: event
+          args: >
+            --title "Deployment: ${{ github.ref_name }}"
+            --text "Deployed commit ${{ github.sha }} to ${{ github.ref_name }}
+            
+            **Repository:** ${{ github.repository }}
+            **Actor:** ${{ github.actor }}
+            **Workflow:** ${{ github.workflow }}
+            **Event:** ${{ github.event_name }}
+            
+            [View Commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+            --tags "env:${{ github.ref_name }},service:llm-reliability-control-plane,deployment:github-actions"
+            --alert_type "info"
+            --priority "normal"
+
+  test-and-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run tests
+        run: |
+          python test_end_to_end.py || true
+        env:
+          LRCP_GEMINI_API_KEY: ${{ secrets.LRCP_GEMINI_API_KEY }}
+          LRCP_DATADOG_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+      
+      - name: Send Test Results to Datadog
+        if: always()
+        uses: DataDog/datadog-ci@v2
+        with:
+          api_key: ${{ secrets.DD_API_KEY }}
+          app_key: ${{ secrets.DD_APP_KEY }}
+          site: ${{ secrets.DD_SITE || 'datadoghq.com' }}
+          command: event
+          args: >
+            --title "Test Results: ${{ job.status }}"
+            --text "Test run completed with status: ${{ job.status }}
+            
+            **Commit:** ${{ github.sha }}
+            **Branch:** ${{ github.ref_name }}
+            **Workflow:** ${{ github.workflow }}"
+            --tags "env:${{ github.ref_name }},service:llm-reliability-control-plane,test:ci"
+            --alert_type "${{ job.status == 'success' && 'success' || 'error' }}"
+            --priority "${{ job.status == 'success' && 'low' || 'normal' }}"
+

@@ -139,6 +139,33 @@
         "attach_dashboard": true,
         "attach_logs": true
       }
+    },
+    {
+      "name": "LLM Daily Cost Budget Alert",
+      "type": "metric alert",
+      "query": "sum(last_24h):sum:llm.cost.usd{service:llm-reliability-control-plane} > 1.0",
+      "message": "🚨 **What failed?** Daily LLM cost budget exceeded ($1.00).\n\n**Why did it fail?** Possible causes:\n- Unusually high traffic volume\n- Cost spike from long context prompts\n- Model upgrade to more expensive tier\n- Token abuse or prompt injection attack\n\n**What should the engineer do next?**\n1. Review cost breakdown by endpoint and time period\n2. Check for unusual traffic patterns\n3. Investigate recent model or prompt changes\n4. Consider: implement rate limiting, downgrade model tier, enable caching, or add cost controls\n5. Review cost optimization recommendations from `/insights` endpoint\n\n**Attached context:** Cost dashboard, daily cost trends, and cost breakdown by endpoint are attached.",
+      "tags": ["llm", "cost", "budget", "critical"],
+      "options": {
+        "notify_audit": true,
+        "require_full_window": true,
+        "notify_no_data": false,
+        "renotify_interval": 3600,
+        "escalation_message": "Daily cost budget still exceeded. Review cost optimization recommendations.",
+        "new_host_delay": 300,
+        "evaluation_delay": 60,
+        "include_tags": true,
+        "thresholds": {
+          "critical": 1.0,
+          "warning": 0.8
+        }
+      },
+      "incident_config": {
+        "create_incident": true,
+        "incident_severity": "SEV-2",
+        "attach_dashboard": true,
+        "attach_logs": true
+      }
     }
   ]
 }

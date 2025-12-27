@@ -1,0 +1,246 @@
+{
+  "name": "LLM Reliability - Root Cause Analysis",
+  "type": "notebook",
+  "cells": [
+    {
+      "type": "markdown",
+      "content": "# 🔍 LLM Reliability Control Plane - Root Cause Analysis\n\nThis notebook provides comprehensive root cause analysis capabilities for LLM application incidents.\n\n## Purpose\n- Correlate metrics, logs, and traces to identify root causes\n- Analyze cost anomalies and quality degradation\n- Investigate latency spikes and error patterns\n- Generate actionable insights for incident resolution"
+    },
+    {
+      "type": "markdown",
+      "content": "## 📊 Step 1: Incident Overview\n\nSelect a time range and service to analyze incidents."
+    },
+    {
+      "type": "timeseries",
+      "title": "Health Score Trend",
+      "definition": {
+        "requests": [
+          {
+            "q": "avg:llm.health_score{service:llm-reliability-control-plane}",
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "label": "Health Score (0-100)",
+          "min": 0,
+          "max": 100
+        },
+        "markers": [
+          {
+            "value": "y = 60",
+            "display_type": "error dashed",
+            "label": "Degraded Threshold"
+          },
+          {
+            "value": "y = 80",
+            "display_type": "ok dashed",
+            "label": "Healthy Threshold"
+          }
+        ]
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Component Scores Breakdown",
+      "definition": {
+        "requests": [
+          {
+            "q": "avg:llm.health_score{service:llm-reliability-control-plane} by {component}",
+            "display_type": "line"
+          }
+        ],
+        "yaxis": {
+          "label": "Component Score",
+          "min": 0,
+          "max": 100
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 🔗 Step 2: Trace-Log-Metric Correlation\n\nCorrelate traces with logs and metrics to identify the root cause."
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency vs Error Rate Correlation",
+      "definition": {
+        "requests": [
+          {
+            "q": "avg:llm.request.latency_ms{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {
+              "palette": "blue",
+              "line_type": "solid"
+            },
+            "yaxis": "left"
+          },
+          {
+            "q": "sum:llm.error.count{service:llm-reliability-control-plane}.as_rate()",
+            "display_type": "line",
+            "style": {
+              "palette": "red",
+              "line_type": "dashed"
+            },
+            "yaxis": "right"
+          }
+        ],
+        "yaxis": {
+          "left": {
+            "label": "Latency (ms)"
+          },
+          "right": {
+            "label": "Error Rate (errors/sec)"
+          }
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost vs Quality Correlation",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane}",
+            "display_type": "area",
+            "style": {
+              "palette": "green"
+            },
+            "yaxis": "left"
+          },
+          {
+            "q": "avg:llm.semantic_similarity_score{service:llm-reliability-control-plane}",
+            "display_type": "line",
+            "style": {
+              "palette": "purple",
+              "line_type": "solid"
+            },
+            "yaxis": "right"
+          }
+        ],
+        "yaxis": {
+          "left": {
+            "label": "Cost (USD)"
+          },
+          "right": {
+            "label": "Quality Score (0-1)",
+            "min": 0,
+            "max": 1
+          }
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 🎯 Step 3: Anomaly Detection Analysis\n\nReview ML-based anomaly detection results."
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost Anomaly Detection",
+      "definition": {
+        "requests": [
+          {
+            "q": "anomalies(avg(last_15m):sum:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {
+              "palette": "warm"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Anomaly Score"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency Anomaly Detection",
+      "definition": {
+        "requests": [
+          {
+            "q": "anomalies(avg(last_15m):p95:llm.request.latency_ms{service:llm-reliability-control-plane} by {endpoint}, 'basic', 2)",
+            "display_type": "line",
+            "style": {
+              "palette": "cool"
+            }
+          }
+        ],
+        "yaxis": {
+          "label": "Anomaly Score"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 📈 Step 4: Endpoint Breakdown\n\nAnalyze performance by endpoint."
+    },
+    {
+      "type": "timeseries",
+      "title": "Latency by Endpoint",
+      "definition": {
+        "requests": [
+          {
+            "q": "p95:llm.request.latency_ms{service:llm-reliability-control-plane} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "label": "p95 Latency (ms)"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Cost by Endpoint",
+      "definition": {
+        "requests": [
+          {
+            "q": "sum:llm.cost.usd{service:llm-reliability-control-plane} by {endpoint}",
+            "display_type": "bars"
+          }
+        ],
+        "yaxis": {
+          "label": "Cost (USD)"
+        },
+        "legend": {
+          "show_legend": true
+        }
+      }
+    },
+    {
+      "type": "markdown",
+      "content": "## 🔍 Step 5: Trace Analysis\n\nReview APM traces for detailed span breakdown."
+    },
+    {
+      "type": "markdown",
+      "content": "### Custom Spans Breakdown\n\n- `llm.gemini.generate` - Main LLM generation operation\n- `llm.token_counting` - Token counting and estimation\n- `llm.token_extraction` - Token extraction from API response\n- `llm.cost_calculation` - Cost calculation\n- `llm.quality_scoring` - Quality signal computation\n- `llm.context_expansion` - Context expansion (if simulated)\n- `llm.latency_simulation` - Latency simulation (if simulated)\n- `llm.retry_attempt` - Retry attempts (if simulated)"
+    },
+    {
+      "type": "markdown",
+      "content": "## 📝 Step 6: Actionable Recommendations\n\nBased on the analysis above, review the `/insights` endpoint for AI-powered recommendations."
+    },
+    {
+      "type": "markdown",
+      "content": "### Next Steps\n\n1. **If latency spike detected:**\n   - Check APM traces for slow spans\n   - Review custom span tags for LLM-specific context\n   - Check Vertex AI service status\n\n2. **If cost anomaly detected:**\n   - Review token usage by endpoint\n   - Check for prompt engineering changes\n   - Consider model downgrade or caching\n\n3. **If quality degradation detected:**\n   - Review semantic similarity trends\n   - Sample responses from logs\n   - Check for model version changes\n\n4. **If error burst detected:**\n   - Review error logs with trace correlation\n   - Check authentication credentials\n   - Review retry logic"
+    }
+  ]
+}
+
+

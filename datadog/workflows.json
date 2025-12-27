@@ -1,0 +1,302 @@
+{
+  "workflows": [
+    {
+      "name": "Auto-Remediate Cost Spike with Auto-Scale Down",
+      "description": "Automatically remediates cost spikes by switching to lower-cost model, scaling down non-critical workloads, and creating incident",
+      "enabled": true,
+      "triggers": [
+        {
+          "type": "monitor",
+          "monitor_name": "LLM Cost Anomaly Detection",
+          "conditions": {
+            "alert": "triggered"
+          }
+        },
+        {
+          "type": "monitor",
+          "monitor_name": "Workflow Trigger: Cost Spike with Auto-Scale Down",
+          "conditions": {
+            "alert": "triggered"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "name": "Log Cost Spike",
+          "type": "log",
+          "action": {
+            "message": "Cost spike detected. Auto-remediation workflow triggered.",
+            "level": "warn",
+            "tags": ["workflow:cost_spike", "auto_remediation", "auto_scale"]
+          }
+        },
+        {
+          "step": 2,
+          "name": "Switch to Lower-Cost Model",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/model",
+            "body": {
+              "model": "gemini-1.5-flash",
+              "reason": "cost_spike_remediation"
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 2.5,
+          "name": "Auto-Scale Down Non-Critical Workloads",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/scale",
+            "body": {
+              "action": "scale_down",
+              "target_replicas": 1,
+              "reason": "cost_spike_remediation",
+              "workloads": ["non_critical", "batch_jobs"]
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 3,
+          "name": "Create Incident",
+          "type": "incident",
+          "action": {
+            "title": "Cost Spike Auto-Remediated",
+            "severity": "SEV-3",
+            "body": "Cost spike detected and auto-remediated by switching to gemini-1.5-flash model. Review cost trends in dashboard.",
+            "tags": ["auto_remediated", "cost", "workflow"]
+          }
+        },
+        {
+          "step": 4,
+          "name": "Notify Team",
+          "type": "notification",
+          "action": {
+            "channels": ["slack", "email"],
+            "message": "Cost spike detected and auto-remediated. Model switched to gemini-1.5-flash. Please review.",
+            "priority": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auto-Remediate Latency Spike",
+      "description": "Automatically enables caching and creates incident when latency SLO is breached",
+      "enabled": true,
+      "triggers": [
+        {
+          "type": "monitor",
+          "monitor_name": "LLM p95 Latency SLO Burn",
+          "conditions": {
+            "alert": "triggered"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "name": "Log Latency Spike",
+          "type": "log",
+          "action": {
+            "message": "Latency SLO breach detected. Auto-remediation workflow triggered.",
+            "level": "warn",
+            "tags": ["workflow:latency_spike", "auto_remediation"]
+          }
+        },
+        {
+          "step": 2,
+          "name": "Enable Response Caching",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/cache",
+            "body": {
+              "enabled": true,
+              "ttl_seconds": 3600,
+              "cache_size_mb": 1000,
+              "reason": "latency_remediation"
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 2.5,
+          "name": "Scale Up Caching Infrastructure",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/scale",
+            "body": {
+              "action": "scale_up",
+              "component": "cache",
+              "target_replicas": 3,
+              "reason": "latency_remediation_caching"
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 3,
+          "name": "Create Incident",
+          "type": "incident",
+          "action": {
+            "title": "Latency SLO Breach Auto-Remediated",
+            "severity": "SEV-2",
+            "body": "Latency SLO breach detected and auto-remediated by enabling response caching. Review latency trends in dashboard.",
+            "tags": ["auto_remediated", "latency", "slo", "workflow"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auto-Remediate Quality Degradation",
+      "description": "Automatically switches to higher-quality model when quality degradation is detected",
+      "enabled": true,
+      "triggers": [
+        {
+          "type": "monitor",
+          "monitor_name": "LLM Quality Degradation",
+          "conditions": {
+            "alert": "triggered"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "name": "Log Quality Issue",
+          "type": "log",
+          "action": {
+            "message": "Quality degradation detected. Auto-remediation workflow triggered.",
+            "level": "warn",
+            "tags": ["workflow:quality_degradation", "auto_remediation"]
+          }
+        },
+        {
+          "step": 2,
+          "name": "Switch to Higher-Quality Model",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/model",
+            "body": {
+              "model": "gemini-1.5-pro",
+              "reason": "quality_remediation",
+              "auto_switch": true
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 2.5,
+          "name": "Enable Quality-Based Model Routing",
+          "type": "api",
+          "action": {
+            "method": "POST",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/api/configure/routing",
+            "body": {
+              "routing_strategy": "quality_optimized",
+              "min_quality_threshold": 0.7,
+              "reason": "quality_remediation"
+            },
+            "headers": {
+              "Content-Type": "application/json"
+            }
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 3,
+          "name": "Create Incident",
+          "type": "incident",
+          "action": {
+            "title": "Quality Degradation Auto-Remediated",
+            "severity": "SEV-2",
+            "body": "Quality degradation detected and auto-remediated by switching to gemini-1.5-pro model. Review quality metrics in dashboard.",
+            "tags": ["auto_remediated", "quality", "workflow"]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Runbook Execution: Error Burst",
+      "description": "Executes runbook steps when error burst is detected",
+      "enabled": true,
+      "triggers": [
+        {
+          "type": "monitor",
+          "monitor_name": "LLM Error Burst / Retry Storm",
+          "conditions": {
+            "alert": "triggered"
+          }
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "name": "Check Vertex AI Status",
+          "type": "api",
+          "action": {
+            "method": "GET",
+            "url": "https://status.cloud.google.com/api/status",
+            "headers": {}
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 2,
+          "name": "Check Authentication",
+          "type": "api",
+          "action": {
+            "method": "GET",
+            "url": "https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app/health",
+            "headers": {}
+          },
+          "on_failure": "continue"
+        },
+        {
+          "step": 3,
+          "name": "Create Incident with Runbook",
+          "type": "incident",
+          "action": {
+            "title": "Error Burst Detected - Runbook Executed",
+            "severity": "SEV-1",
+            "body": "Error burst detected. Runbook executed:\n1. Checked Vertex AI service status\n2. Verified authentication\n3. Created incident for further investigation\n\nNext steps:\n- Review error logs in Datadog\n- Check APM traces for failed requests\n- Verify network connectivity\n- Review recent deployments",
+            "tags": ["error", "runbook", "workflow", "critical"]
+          }
+        },
+        {
+          "step": 4,
+          "name": "Page On-Call",
+          "type": "oncall",
+          "action": {
+            "escalation_policy": "critical_errors",
+            "urgency": "high"
+          }
+        }
+      ]
+    }
+  ],
+  "note": "These workflows can be imported into Datadog Workflow Automation. Service URL: https://llm-reliability-control-plane-3d5idf6kja-uc.a.run.app. Workflows will trigger automatically when monitors fire."
+}
+

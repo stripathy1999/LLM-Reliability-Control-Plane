@@ -1,0 +1,943 @@
+/* 🎨 Ultra-Modern Creative Swagger UI - Premium Dark Theme */
+
+/* Import Premium Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* Global Premium Dark Theme */
+* {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 25%, #2d1b4e 50%, #1a1f3a 75%, #0f1419 100%) !important;
+  background-size: 400% 400% !important;
+  animation: gradientShift 15s ease infinite !important;
+  color: #e2e8f0 !important;
+  min-height: 100vh !important;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.swagger-ui {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  background: transparent !important;
+  min-height: 100vh !important;
+}
+
+/* ✨ Premium Topbar with Animated Gradient */
+.swagger-ui .topbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #4facfe 100%) !important;
+  background-size: 300% 300% !important;
+  animation: gradientFlow 8s ease infinite !important;
+  padding: 28px 40px !important;
+  box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4), 
+              0 0 60px rgba(118, 75, 162, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.15) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .topbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes gradientFlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.swagger-ui .topbar .download-url-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.swagger-ui .topbar .download-url-wrapper input {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
+  color: white !important;
+  padding: 12px 20px !important;
+  font-weight: 600 !important;
+  font-size: 0.95em !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+}
+
+.swagger-ui .topbar .download-url-wrapper input:focus {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 6px 25px rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px) !important;
+}
+
+.swagger-ui .topbar .download-url-wrapper input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.swagger-ui .topbar .download-url-wrapper .btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+  border-radius: 12px !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  font-size: 0.9em !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+
+.swagger-ui .topbar .download-url-wrapper .btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 🎯 Premium Info Section - Glass Morphism */
+.swagger-ui .info {
+  margin: 50px auto !important;
+  max-width: 1200px !important;
+  padding: 50px !important;
+  background: rgba(26, 32, 44, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+              0 0 0 1px rgba(255, 255, 255, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .info::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.swagger-ui .info .title {
+  font-size: 3.5em !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 60%, #4facfe 100%) !important;
+  background-size: 200% 200% !important;
+  animation: gradientFlow 5s ease infinite !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  margin-bottom: 30px !important;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.5) !important;
+  position: relative !important;
+  z-index: 1 !important;
+  letter-spacing: -1px !important;
+}
+
+.swagger-ui .info .description {
+  font-size: 1.2em !important;
+  line-height: 2 !important;
+  color: #cbd5e0 !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.swagger-ui .info .description h1,
+.swagger-ui .info .description h2,
+.swagger-ui .info .description h3 {
+  color: #e2e8f0 !important;
+  margin-top: 30px !important;
+  margin-bottom: 16px !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.swagger-ui .info .description ul {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.swagger-ui .info .description ul li {
+  padding: 12px 0 !important;
+  padding-left: 40px !important;
+  position: relative !important;
+  color: #cbd5e0 !important;
+  font-size: 1.05em !important;
+}
+
+.swagger-ui .info .description ul li:before {
+  content: "✨" !important;
+  position: absolute !important;
+  left: 0 !important;
+  font-size: 1.3em !important;
+  filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.6)) !important;
+  animation: sparkle 2s ease-in-out infinite !important;
+}
+
+@keyframes sparkle {
+  0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+}
+
+/* 🎴 Premium Tag Sections - 3D Card Effect */
+.swagger-ui .opblock-tag {
+  background: rgba(26, 32, 44, 0.5) !important;
+  backdrop-filter: blur(15px) !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  border-radius: 20px !important;
+  margin-bottom: 30px !important;
+  padding: 28px 32px !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.05),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .opblock-tag::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.swagger-ui .opblock-tag:hover::before {
+  left: 100%;
+}
+
+.swagger-ui .opblock-tag:hover {
+  border-color: rgba(102, 126, 234, 0.6) !important;
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4),
+              0 0 0 1px rgba(102, 126, 234, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-6px) scale(1.01) !important;
+  background: rgba(26, 32, 44, 0.7) !important;
+}
+
+.swagger-ui .opblock-tag .opblock-tag-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.swagger-ui .opblock-tag .opblock-tag {
+  font-size: 1.6em !important;
+  font-weight: 800 !important;
+  color: #e2e8f0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 2px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3)) !important;
+}
+
+/* 🚀 Ultra-Modern Operation Blocks */
+.swagger-ui .opblock {
+  border-radius: 16px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  background: rgba(26, 32, 44, 0.5) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.swagger-ui .opblock::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.swagger-ui .opblock:hover::after {
+  opacity: 1;
+}
+
+.swagger-ui .opblock:hover {
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.4),
+              0 0 0 1px rgba(102, 126, 234, 0.3) !important;
+  transform: translateY(-4px) !important;
+  border-color: rgba(102, 126, 234, 0.5) !important;
+}
+
+.swagger-ui .opblock.opblock-post {
+  border-left: 5px solid #48bb78 !important;
+  background: linear-gradient(90deg, rgba(72, 187, 120, 0.15) 0%, rgba(26, 32, 44, 0.5) 5%) !important;
+}
+
+.swagger-ui .opblock.opblock-post::after {
+  background: linear-gradient(90deg, transparent, rgba(72, 187, 120, 0.6), transparent) !important;
+}
+
+.swagger-ui .opblock.opblock-get {
+  border-left: 5px solid #4299e1 !important;
+  background: linear-gradient(90deg, rgba(66, 153, 225, 0.15) 0%, rgba(26, 32, 44, 0.5) 5%) !important;
+}
+
+.swagger-ui .opblock.opblock-get::after {
+  background: linear-gradient(90deg, transparent, rgba(66, 153, 225, 0.6), transparent) !important;
+}
+
+.swagger-ui .opblock.opblock-put {
+  border-left: 5px solid #ed8936 !important;
+  background: linear-gradient(90deg, rgba(237, 137, 54, 0.15) 0%, rgba(26, 32, 44, 0.5) 5%) !important;
+}
+
+.swagger-ui .opblock.opblock-put::after {
+  background: linear-gradient(90deg, transparent, rgba(237, 137, 54, 0.6), transparent) !important;
+}
+
+.swagger-ui .opblock.opblock-delete {
+  border-left: 5px solid #f56565 !important;
+  background: linear-gradient(90deg, rgba(245, 101, 101, 0.15) 0%, rgba(26, 32, 44, 0.5) 5%) !important;
+}
+
+.swagger-ui .opblock.opblock-delete::after {
+  background: linear-gradient(90deg, transparent, rgba(245, 101, 101, 0.6), transparent) !important;
+}
+
+.swagger-ui .opblock-summary {
+  padding: 24px 28px !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 20px !important;
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+.swagger-ui .opblock-summary-method {
+  padding: 10px 20px !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  font-size: 0.85em !important;
+  min-width: 100px !important;
+  text-align: center !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+              0 2px 8px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .opblock-summary-method::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.swagger-ui .opblock-summary-method:hover::before {
+  left: 100%;
+}
+
+.swagger-ui .opblock-summary-method.opblock-summary-method-post {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 50%, #2f855a 100%) !important;
+  color: white !important;
+}
+
+.swagger-ui .opblock-summary-method.opblock-summary-method-get {
+  background: linear-gradient(135deg, #4299e1 0%, #3182ce 50%, #2c5282 100%) !important;
+  color: white !important;
+}
+
+.swagger-ui .opblock-summary-method.opblock-summary-method-put {
+  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 50%, #c05621 100%) !important;
+  color: white !important;
+}
+
+.swagger-ui .opblock-summary-method.opblock-summary-method-delete {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 50%, #c53030 100%) !important;
+  color: white !important;
+}
+
+.swagger-ui .opblock-summary-path {
+  font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  font-size: 1.2em !important;
+  font-weight: 700 !important;
+  color: #e2e8f0 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* 💎 Premium Try It Out Button */
+.swagger-ui .btn.try-out__btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%) !important;
+  background-size: 200% 200% !important;
+  animation: gradientFlow 3s ease infinite !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 14px 28px !important;
+  font-weight: 700 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5),
+              0 0 0 0 rgba(102, 126, 234, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .btn.try-out__btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.swagger-ui .btn.try-out__btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.swagger-ui .btn.try-out__btn:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6),
+              0 0 0 4px rgba(102, 126, 234, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.swagger-ui .btn.try-out__btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+/* ⚡ Premium Execute Button */
+.swagger-ui .btn.execute {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 50%, #2f855a 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 16px 32px !important;
+  font-weight: 800 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.5),
+              0 0 0 0 rgba(72, 187, 120, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-size: 0.95em !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .btn.execute::after {
+  content: '⚡';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+  50% { transform: translateY(-50%) scale(1.2); opacity: 0.8; }
+}
+
+.swagger-ui .btn.execute:hover {
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 10px 30px rgba(72, 187, 120, 0.6),
+              0 0 0 4px rgba(72, 187, 120, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* 🎨 Premium Parameters Section */
+.swagger-ui .parameters-container {
+  background: rgba(26, 32, 44, 0.6) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 16px !important;
+  padding: 28px !important;
+  margin: 24px 0 !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+.swagger-ui .parameter__name {
+  font-weight: 800 !important;
+  color: #e2e8f0 !important;
+  font-size: 1.1em !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swagger-ui .parameter__type {
+  color: #667eea !important;
+  font-weight: 700 !important;
+  background: rgba(102, 126, 234, 0.15) !important;
+  padding: 4px 12px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.swagger-ui .parameter__description {
+  color: #cbd5e0 !important;
+  margin-top: 10px !important;
+  line-height: 1.7 !important;
+  font-size: 0.95em !important;
+}
+
+/* 📝 Premium Request Body */
+.swagger-ui .body-param-content textarea {
+  font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  background: #0f1419 !important;
+  border: 2px solid rgba(102, 126, 234, 0.4) !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  font-size: 0.9em !important;
+  transition: all 0.3s ease !important;
+  color: #e2e8f0 !important;
+  line-height: 1.8 !important;
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4),
+              0 0 0 0 rgba(102, 126, 234, 0.3) !important;
+}
+
+.swagger-ui .body-param-content textarea:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4),
+              0 0 0 4px rgba(102, 126, 234, 0.3),
+              0 0 20px rgba(102, 126, 234, 0.2) !important;
+  background: #1a202c !important;
+}
+
+/* 🎯 Premium Response Section */
+.swagger-ui .responses-wrapper {
+  margin-top: 28px !important;
+}
+
+.swagger-ui .response-col_status {
+  font-weight: 800 !important;
+  padding: 12px 20px !important;
+  border-radius: 12px !important;
+  font-size: 1em !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .response-col_status::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.swagger-ui .response-col_status:hover::before {
+  left: 100%;
+}
+
+.swagger-ui .response-col_status[data-code="200"] {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 50%, #2f855a 100%) !important;
+  color: white !important;
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.swagger-ui .response-col_status[data-code="422"],
+.swagger-ui .response-col_status[data-code="500"] {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 50%, #c53030 100%) !important;
+  color: white !important;
+  box-shadow: 0 6px 20px rgba(245, 101, 101, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.swagger-ui .response-col_description {
+  padding: 16px !important;
+  color: #cbd5e0 !important;
+}
+
+/* 💻 Premium Code Blocks */
+.swagger-ui .highlight-code {
+  background: #0a0e27 !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 20px 0 !important;
+  box-shadow: inset 0 4px 16px rgba(0, 0, 0, 0.5),
+              0 0 0 1px rgba(102, 126, 234, 0.1),
+              0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.swagger-ui .highlight-code::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+  background-size: 200% 100%;
+  animation: gradientFlow 3s linear infinite;
+}
+
+.swagger-ui .highlight-code pre {
+  color: #e2e8f0 !important;
+  font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
+  font-size: 0.9em !important;
+  line-height: 1.9 !important;
+  margin: 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* 📋 Examples Section */
+.swagger-ui .examples {
+  background: rgba(26, 32, 44, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 20px 0 !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swagger-ui .examples-select {
+  background: #1a202c !important;
+  border: 2px solid rgba(102, 126, 234, 0.4) !important;
+  border-radius: 10px !important;
+  padding: 12px 20px !important;
+  font-weight: 700 !important;
+  color: #e2e8f0 !important;
+  font-family: 'Inter', sans-serif !important;
+  transition: all 0.3s ease !important;
+}
+
+.swagger-ui .examples-select:focus {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2) !important;
+}
+
+/* 🗂️ Schema Section */
+.swagger-ui .model-box {
+  background: rgba(26, 32, 44, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  margin: 20px 0 !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swagger-ui .model-title {
+  font-weight: 800 !important;
+  color: #e2e8f0 !important;
+  margin-bottom: 16px !important;
+  font-size: 1.3em !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* 🎨 Custom Scrollbar */
+.swagger-ui ::-webkit-scrollbar {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.swagger-ui ::-webkit-scrollbar-track {
+  background: #1a202c !important;
+  border-radius: 6px !important;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 6px !important;
+  border: 2px solid #1a202c !important;
+}
+
+.swagger-ui ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%) !important;
+}
+
+/* 🔘 Premium Buttons */
+.swagger-ui .btn-clear {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 50%, #c53030 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.swagger-ui .btn-clear:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 25px rgba(245, 101, 101, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ✨ Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.swagger-ui .opblock.opblock-is-open .opblock-body {
+  animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* 🎯 Model Schema Colors */
+.swagger-ui .model .property {
+  color: #e2e8f0 !important;
+}
+
+.swagger-ui .model .property.primitive {
+  color: #667eea !important;
+  font-weight: 700 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+.swagger-ui .model .property.required {
+  color: #f56565 !important;
+  font-weight: 800 !important;
+}
+
+/* 📊 Table Styling */
+.swagger-ui table {
+  background: rgba(26, 32, 44, 0.6) !important;
+  backdrop-filter: blur(10px) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swagger-ui table thead {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%) !important;
+}
+
+.swagger-ui table thead th {
+  color: #e2e8f0 !important;
+  font-weight: 800 !important;
+  padding: 16px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-size: 0.85em !important;
+}
+
+.swagger-ui table tbody td {
+  color: #cbd5e0 !important;
+  padding: 14px 16px !important;
+  border-color: rgba(102, 126, 234, 0.15) !important;
+}
+
+.swagger-ui table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.1) !important;
+}
+
+/* 📥 Input Fields */
+.swagger-ui input[type="text"],
+.swagger-ui input[type="email"],
+.swagger-ui input[type="password"],
+.swagger-ui select {
+  background: #1a202c !important;
+  border: 2px solid rgba(102, 126, 234, 0.4) !important;
+  border-radius: 10px !important;
+  padding: 12px 18px !important;
+  color: #e2e8f0 !important;
+  transition: all 0.3s ease !important;
+  font-weight: 500 !important;
+}
+
+.swagger-ui input[type="text"]:focus,
+.swagger-ui input[type="email"]:focus,
+.swagger-ui input[type="password"]:focus,
+.swagger-ui select:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2),
+              0 4px 12px rgba(102, 126, 234, 0.3) !important;
+  background: #1e293b !important;
+}
+
+/* 🎭 Scheme Container */
+.swagger-ui .scheme-container {
+  background: rgba(26, 32, 44, 0.6) !important;
+  backdrop-filter: blur(15px) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin: 24px 0 !important;
+  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swagger-ui .btn.authorize {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 10px !important;
+  padding: 12px 24px !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.swagger-ui .btn.authorize:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5) !important;
+}
+
+/* 🌟 Success/Error Messages */
+.swagger-ui .response .response-col_description__inner {
+  padding: 20px !important;
+  border-radius: 12px !important;
+  margin: 16px 0 !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.swagger-ui .response .response-col_description__inner.success {
+  background: rgba(72, 187, 120, 0.15) !important;
+  border-left: 4px solid #48bb78 !important;
+  color: #c6f6d5 !important;
+  box-shadow: 0 4px 16px rgba(72, 187, 120, 0.2) !important;
+}
+
+.swagger-ui .response .response-col_description__inner.error {
+  background: rgba(245, 101, 101, 0.15) !important;
+  border-left: 4px solid #f56565 !important;
+  color: #fed7d7 !important;
+  box-shadow: 0 4px 16px rgba(245, 101, 101, 0.2) !important;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .swagger-ui .info {
+    padding: 30px !important;
+    margin: 20px !important;
+  }
+  
+  .swagger-ui .info .title {
+    font-size: 2.2em !important;
+  }
+  
+  .swagger-ui .opblock-summary {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  
+  .swagger-ui .topbar {
+    padding: 20px !important;
+  }
+}
+
+/* 🎨 Additional Polish - Loading States */
+.swagger-ui .loading-container::after {
+  border-color: #667eea transparent transparent transparent !important;
+  border-width: 5px !important;
+  width: 50px !important;
+  height: 50px !important;
+}
+
+/* ✨ Floating Particles Effect (Optional - can be added via JS) */
+.swagger-ui .opblock-tag:hover {
+  position: relative;
+}
+
+/* 🎯 Enhanced Focus States */
+.swagger-ui *:focus {
+  outline: none !important;
+}
+
+.swagger-ui button:focus,
+.swagger-ui input:focus,
+.swagger-ui select:focus,
+.swagger-ui textarea:focus {
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.3) !important;
+}
+
+/* 🌈 Additional Visual Enhancements */
+.swagger-ui .opblock-summary:hover .opblock-summary-path {
+  color: #667eea !important;
+  text-shadow: 0 0 10px rgba(102, 126, 234, 0.5) !important;
+}
+
+.swagger-ui .response-col_status:hover {
+  transform: scale(1.05) !important;
+}

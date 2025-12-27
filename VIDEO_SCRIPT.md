@@ -1,133 +1,240 @@
-# 3-Minute Video Walkthrough Script
+# 🎬 Video Script - 3-Minute Datadog Challenge Demo
 
-Use this as a guide for your submission video. Aim for 3 minutes total.
-
-## Structure (3 minutes)
-
-**Key Message**: "This isn't just observability - it's an AI-powered reliability control plane that monitors everything, predicts issues, and recommends solutions."
-
-**🎭 START WITH FAILURE THEATER** - This is your most memorable moment!
-
-### 1. Introduction & The "Wow" Moment (30 seconds)
-
-**Script:**
-"Hi, I'm [your name] and this is my LLM Reliability Control Plane for the Datadog hackathon. 
-
-Watch this - I'm going to break production with one click. [Click Cost Explosion button]
-
-See that? Health score dropped from 85 to 45 in seconds. In Datadog, a monitor just triggered and an incident was created automatically with AI recommendations.
-
-This is our **Live Failure Theater** - a beautiful UI that demonstrates our AI-powered reliability control plane. It combines all metrics into a single health score, provides AI recommendations, and predicts issues before they happen.
-
-Every feature answers three questions: What failed? Why did it fail? What should the engineer do next?"
-
-**Visuals:**
-- Show Datadog dashboard overview
-- Highlight different sections (latency, cost, quality, security)
+**Target Length:** 3 minutes (180 seconds)  
+**Format:** Screen recording with voiceover  
+**Focus:** Answer the 3 critical questions + showcase innovation
 
 ---
 
-### 2. Detection Rules & Thought Process (60 seconds)
+## 📋 Pre-Recording Checklist
 
-**Script:**
-"I've defined 5 detection rules, each targeting a specific failure mode:
-
-First, **Latency SLO Burn** - monitors p95 latency exceeding 1500ms. This catches performance degradation before users notice.
-
-Second, **Cost Anomaly Detection** - alerts when cost spikes 2x above baseline. This is critical for LLM apps where token usage can explode unexpectedly.
-
-Third, **Error Burst Monitor** - detects when error rates spike, indicating upstream service issues or authentication problems.
-
-Fourth, **Quality Degradation** - tracks semantic similarity scores. If responses drift from expected quality, we know immediately.
-
-And fifth, **Safety Block Surge** - monitors when safety filters trigger frequently, indicating potential attacks or misconfiguration.
-
-Each monitor includes a complete runbook in the alert message, so engineers know exactly what to do."
-
-**Visuals:**
-- Show monitor configuration screen
-- Highlight each monitor's query and threshold
-- Show monitor message with runbook
+- [ ] Application deployed and accessible
+- [ ] Datadog dashboard imported and populated
+- [ ] All monitors imported and active
+- [ ] Incident rules configured
+- [ ] Traffic generator ready
+- [ ] Swagger UI accessible
+- [ ] Failure Theater UI accessible (optional)
+- [ ] All screenshots prepared
 
 ---
 
-### 3. Innovation Deep Dive (60 seconds)
+## 🎯 Video Structure (180 seconds)
+
+### **Opening (0:00 - 0:15)** - 15 seconds
+
+**Visual:** Show application running, Datadog dashboard
 
 **Script:**
-"Five innovations make this solution stand out:
+> "Hi! I'm [Name], and this is the LLM Reliability Control Plane - a comprehensive observability solution for Large Language Model applications built for the Datadog hackathon challenge. This solution answers three critical questions: What failed? Why did it fail? And what should the engineer do next?"
 
-**First, Composite Health Score** - Instead of 20+ separate metrics, one number (0-100) tells you everything. It combines performance, reliability, cost, quality, and security. When it drops below 60, you know immediately something is wrong.
+**Key Points:**
+- Introduce yourself
+- Name the project
+- State the 3 questions
 
-**Second, AI-Powered Recommendations** - We don't just alert, we analyze and suggest. Cost spike? We tell you to downgrade the model and save 30%. Quality dropping? We suggest prompt improvements. Every recommendation includes estimated impact.
+---
 
-**Third, Predictive Alerts** - We forecast issues 24 hours before they happen. Latency trending up? We warn you before the SLO breach. This lets engineers fix issues proactively, not reactively.
+### **Part 1: What Failed? (0:15 - 0:45)** - 30 seconds
 
-**Fourth, Cost Observability** - Most solutions ignore cost. We track every token and dollar, detect anomalies, and suggest optimizations. This prevents budget overruns before they happen.
+**Visual:** Show Datadog dashboard with health score, monitors, metrics
 
-**Fifth, Quality & Security** - We monitor response quality with semantic similarity and detect attacks with prompt injection detection. This ensures responses are accurate and secure, not just fast.
+**Script:**
+> "First, what failed? Our composite health score gives you a single metric - zero to 100 - that combines performance, reliability, cost, quality, and security. Right now, we're at 85, which is healthy. But watch what happens when we trigger a failure scenario."
 
-When any detection rule triggers, Datadog automatically creates an incident with the dashboard, logs, traces, and AI recommendations attached. Engineers know exactly what to do."
+**Action:** 
+- Click "Cost Explosion" button in Failure Theater (or trigger via API)
+- Show health score dropping to 45
+- Show monitor triggering (red alert)
 
-**Visuals:**
-- Show cost metrics on dashboard
+**Script (continued):**
+> "The health score dropped to 45, and our cost anomaly monitor triggered. The dashboard shows exactly what failed - cost per request spiked above our threshold."
+
+**Key Points:**
+- Show health score widget
+- Show monitor alerting
+- Show metrics on dashboard
+
+---
+
+### **Part 2: Why Did It Fail? (0:45 - 1:30)** - 45 seconds
+
+**Visual:** Show incident with runbook, logs, traces
+
+**Script:**
+> "Now, why did it fail? When the monitor triggered, Datadog automatically created an incident with full context. The incident includes a complete runbook that explains possible causes - in this case, long context prompts consuming excessive tokens, or a potential token abuse attack."
+
+**Action:**
+- Open incident in Datadog
+- Show runbook in incident description
+- Show attached logs (filtered by service)
+- Show attached traces (if available)
+
+**Script (continued):**
+> "We can see in the logs that requests had unusually high input token counts. The traces show the exact spans where token counting occurred. This trace-log-metric correlation gives us complete context."
+
+**Key Points:**
+- Show incident creation
+- Show runbook
+- Show log correlation
+- Show trace correlation
+
+---
+
+### **Part 3: What Should the Engineer Do Next? (1:30 - 2:15)** - 45 seconds
+
+**Visual:** Show insights endpoint, recommendations, ML predictions
+
+**Script:**
+> "Finally, what should the engineer do next? Our insights endpoint provides AI-powered recommendations. Let me call it."
+
+**Action:**
+- Open Swagger UI or terminal
+- Call `/insights` endpoint
+- Show response with recommendations
+
+**Script (continued):**
+> "The system recommends: downgrade to a cheaper model tier, implement response caching, or add prompt length limits. It even estimates potential savings - 30% cost reduction. We also have ML-based cost prediction that forecasts costs 24 hours ahead with 85% accuracy."
+
+**Action:**
+- Show recommendations in response
+- Show predictive insights
+- Show ML model status
+
+**Key Points:**
+- Show actionable recommendations
+- Show cost savings estimates
+- Show ML predictions
+
+---
+
+### **Part 4: Innovation Highlights (2:15 - 2:50)** - 35 seconds
+
+**Visual:** Quick showcase of advanced features
+
+**Script:**
+> "What makes this solution stand out? First, we go beyond standard observability - we track cost, quality, and security, not just performance. Second, we use ML-based anomaly detection with Datadog Watchdog, not just thresholds. Third, we provide predictive insights that forecast issues before they happen."
+
+**Action:**
+- Show anomaly detection monitors
 - Show quality metrics
 - Show security signals
-- Show incident creation with attachments
+- Show predictive insights
+
+**Script (continued):**
+> "We also have custom spans for LLM-specific operations, full trace-log-metric correlation, and Datadog notebooks for root cause analysis. This is observability that drives action, not just awareness."
+
+**Key Points:**
+- Highlight innovation features
+- Show advanced Datadog features
+- Emphasize actionability
 
 ---
 
-### 4. Challenges & Solution (30 seconds)
+### **Closing (2:50 - 3:00)** - 10 seconds
+
+**Visual:** Show dashboard again, all green/healthy
 
 **Script:**
-"The main challenge was creating actionable incidents with context. Datadog's Incident Rules solved this - they automatically attach dashboards, logs, and traces when monitors trigger.
+> "This solution provides end-to-end observability for LLM applications, answering all three critical questions with actionable insights. Thank you for watching!"
 
-For the demo, I'm using synthetic LLM responses, but the code is structured to easily swap in real Vertex AI integration. All the observability instrumentation works the same way.
+**Action:**
+- Reset health score (if possible)
+- Show healthy dashboard
+- End screen with project name
 
-The result is a complete observability strategy that makes LLM applications reliable, cost-effective, and secure."
-
-**Visuals:**
-- Show code structure (brief)
-- Show incident with all attachments
-- Show dashboard in action
+**Key Points:**
+- Summarize value
+- Thank viewers
 
 ---
 
-## Key Points to Emphasize
+## 🎥 Recording Tips
 
-1. **End-to-End Observability**: APM + Metrics + Logs + Incidents
-2. **Actionable Incidents**: Full context and runbooks
-3. **Innovation**: Cost, quality, and security observability
-4. **Production Ready**: Code structure supports real Vertex AI
+### **Before Recording:**
+1. Close unnecessary applications
+2. Set screen resolution to 1920x1080
+3. Test microphone audio
+4. Prepare all browser tabs (Datadog, Swagger, Failure Theater)
+5. Have traffic generator ready
+6. Practice the script 2-3 times
 
-## Visual Checklist
+### **During Recording:**
+1. Speak clearly and at moderate pace
+2. Pause briefly when showing UI elements
+3. Use cursor to highlight important areas
+4. Don't rush - 3 minutes is enough time
+5. If you make a mistake, pause and re-record that section
 
-- [ ] Dashboard overview (healthy state)
-- [ ] Monitor configurations (show queries and thresholds)
-- [ ] Monitor messages with runbooks
-- [ ] Cost metrics visualization
-- [ ] Quality metrics visualization
-- [ ] Security signals
-- [ ] Incident creation (trigger → incident)
-- [ ] Incident with attachments (dashboard, logs, traces)
-- [ ] Dashboard during incident (showing triggered monitors)
+### **After Recording:**
+1. Edit out long pauses
+2. Add text overlays for key points (optional)
+3. Add background music (optional, keep it subtle)
+4. Export in 1080p quality
+5. Upload to YouTube/Vimeo
 
-## Tips
+---
 
-- **Practice**: Rehearse to stay within 3 minutes
-- **Screen Recording**: Use clear, high-quality screen capture
-- **Narration**: Speak clearly, pause between sections
-- **Transitions**: Smooth transitions between Datadog views
-- **Highlight**: Use mouse cursor or annotations to highlight key elements
+## 📝 Key Phrases to Use
 
-## Example Flow
+- "Comprehensive observability"
+- "Actionable insights"
+- "ML-powered"
+- "End-to-end correlation"
+- "Beyond standard observability"
+- "Drives action, not just awareness"
+- "Three critical questions"
+- "Composite health score"
+- "Predictive insights"
 
-1. Start: Dashboard overview (5s)
-2. Navigate: Monitors list (10s)
-3. Show: One monitor detail with runbook (15s)
-4. Navigate: Dashboard showing cost/quality/security (20s)
-5. Trigger: Show incident creation (15s)
-6. Show: Incident with attachments (20s)
-7. End: Dashboard during incident (15s)
+---
 
-Total: ~90 seconds for visuals + 90 seconds for narration = 3 minutes
+## 🎯 What Judges Should See
 
+1. ✅ **Clear demonstration** of the 3 questions being answered
+2. ✅ **Automated incident creation** with full context
+3. ✅ **Innovation features** (ML, cost observability, quality metrics)
+4. ✅ **Advanced Datadog features** (custom spans, correlation, notebooks)
+5. ✅ **Production-ready** solution (not just a demo)
+
+---
+
+## 📊 Timing Breakdown
+
+| Section | Time | Key Action |
+|---------|------|------------|
+| Opening | 0:00-0:15 | Introduce project |
+| What Failed? | 0:15-0:45 | Show health score + monitor trigger |
+| Why Failed? | 0:45-1:30 | Show incident + runbook + correlation |
+| What Next? | 1:30-2:15 | Show insights + recommendations |
+| Innovation | 2:15-2:50 | Show advanced features |
+| Closing | 2:50-3:00 | Summarize value |
+
+**Total: 3:00 minutes**
+
+---
+
+## 🚀 Alternative Shorter Version (2 minutes)
+
+If you need a shorter version:
+
+1. **Opening (0:00-0:10)** - 10s
+2. **What Failed? (0:10-0:35)** - 25s
+3. **Why Failed? (0:35-1:05)** - 30s
+4. **What Next? (1:05-1:40)** - 35s
+5. **Innovation (1:40-1:55)** - 15s
+6. **Closing (1:55-2:00)** - 5s
+
+---
+
+## ✅ Post-Recording Checklist
+
+- [ ] Video uploaded to YouTube/Vimeo
+- [ ] Video is public or unlisted
+- [ ] Video link added to submission form
+- [ ] Video description includes project name and key features
+- [ ] Video thumbnail is clear and professional
+
+---
+
+**Good luck with your submission!** 🎉

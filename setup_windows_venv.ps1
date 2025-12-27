@@ -55,3 +55,4 @@ Write-Host "1. Set your Gemini API key: `$env:GEMINI_API_KEY = 'your-key-here'" 
 Write-Host "2. Start the server: uvicorn app.main:app --reload" -ForegroundColor Cyan
 Write-Host "3. Run tests: python test_end_to_end.py" -ForegroundColor Cyan
 
+
